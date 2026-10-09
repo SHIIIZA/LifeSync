@@ -1,0 +1,78 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <p class="ls-eyebrow">Streaks & goals</p>
+    <h1 class="ls-display page-title">Habits</h1>
+    <app-header-actions slot="end"></app-header-actions>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  @if (data.lastError()) {
+    <app-error-banner [message]="data.lastError()!" (onRetry)="data.retryConnection()"></app-error-banner>
+  }
+
+  @if (data.loading()) {
+    <app-loading-spinner></app-loading-spinner>
+  }
+
+  <form class="ls-card" [formGroup]="form" (ngSubmit)="add()">
+    <ion-item>
+      <ion-input label="Habit name" labelPlacement="floating" formControlName="name" placeholder="e.g. Water intake"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input label="Daily target" labelPlacement="floating" formControlName="target" inputmode="numeric" placeholder="e.g. 8"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-select label="Unit" labelPlacement="floating" formControlName="unit">
+        <ion-select-option value="glasses">glasses</ion-select-option>
+        <ion-select-option value="min">minutes</ion-select-option>
+        <ion-select-option value="night">nights</ion-select-option>
+        <ion-select-option value="pages">pages</ion-select-option>
+      </ion-select>
+    </ion-item>
+    @if (form.invalid && form.touched) {
+      <p class="form-error">Enter a name and a numeric daily target.</p>
+    }
+    <p class="ls-hint">Example: name "Reading", target 30, unit "minutes".</p>
+    <ion-button expand="block" shape="round" type="submit">
+      {{ editingId ? 'Save changes' : 'Add habit' }}
+    </ion-button>
+    @if (editingId) {
+      <ion-button expand="block" fill="clear" shape="round" (click)="cancelEdit()">Cancel edit</ion-button>
+    }
+  </form>
+
+  @if (data.habits().length === 0) {
+    <div class="ls-empty ls-card">
+      <ion-icon name="pulse-outline" class="ls-empty-icon"></ion-icon>
+      <p class="ls-empty-title">No habits yet</p>
+      <p class="ls-empty-hint">Add your first habit above to start building a streak.</p>
+    </div>
+  }
+
+  @for (habit of data.habits(); track habit.id) {
+    <div class="habit-card ls-card">
+      <div class="habit-head">
+        <div>
+          <p class="habit-name">{{ habit.name }}</p>
+          <p class="habit-streak">{{ habit.streakDays }}-day streak</p>
+        </div>
+        <ion-button size="small" fill="outline" (click)="log(habit.id)" title="Log progress once">
+          Log {{ habit.unit === 'glasses' ? '1 glass' : habit.unit === 'min' ? '+5 min' : 'done' }}
+        </ion-button>
+        <ion-button size="small" fill="outline" (click)="edit(habit)" title="Edit habit">
+          Edit
+        </ion-button>
+        <ion-button size="small" fill="clear" color="danger" (click)="remove(habit.id)" title="Delete habit">
+          Delete
+        </ion-button>
+      </div>
+      <div class="habit-bar">
+        <div class="habit-bar-fill" [style.width.%]="pct(habit.progress, habit.target)"></div>
+      </div>
+      <p class="habit-progress-label">
+        {{ habit.progress }} / {{ habit.target }} {{ habit.unit }} today
+      </p>
+    </div>
+  }
+</ion-content>

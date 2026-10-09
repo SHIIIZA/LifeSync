@@ -1,0 +1,124 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <p class="ls-eyebrow">Eat well, spend less</p>
+    <h1 class="ls-display page-title">Meals</h1>
+    <app-header-actions slot="end"></app-header-actions>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  @if (data.lastError()) {
+    <app-error-banner [message]="data.lastError()!" (onRetry)="data.retryConnection()"></app-error-banner>
+  }
+
+  @if (data.loading()) {
+    <app-loading-spinner></app-loading-spinner>
+  }
+
+  <form class="ls-card" [formGroup]="mealForm" (ngSubmit)="addMeal()">
+    <ion-item>
+      <ion-select label="Day" labelPlacement="floating" formControlName="day">
+        @for (d of days; track d) {
+          <ion-select-option [value]="d">{{ d }}</ion-select-option>
+        }
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-select label="Meal" labelPlacement="floating" formControlName="meal">
+        @for (m of mealTimes; track m) {
+          <ion-select-option [value]="m">{{ m }}</ion-select-option>
+        }
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-input label="Meal name" labelPlacement="floating" formControlName="name" placeholder="e.g. Oats + banana"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input label="Ingredients (comma-separated)" labelPlacement="floating" formControlName="ingredients" placeholder="e.g. oats, banana, milk"></ion-input>
+    </ion-item>
+    @if (mealForm.invalid && mealForm.touched) {
+      <p class="form-error">Enter a meal name.</p>
+    }
+    <p class="ls-hint">Adds or replaces the dish for that day's slot in the grid below.</p>
+    <ion-button expand="block" shape="round" type="submit">
+      {{ editingMealId ? 'Save changes' : 'Add meal' }}
+    </ion-button>
+    @if (editingMealId) {
+      <ion-button expand="block" fill="clear" shape="round" (click)="cancelEditMeal()">Cancel edit</ion-button>
+    }
+  </form>
+
+    <ion-button expand="block" fill="outline" shape="round" type="button" (click)="generateGroceries()">
+      Generate grocery list from meals
+    </ion-button>
+    @if (groceryStatus) {
+      <p class="ls-hint">{{ groceryStatus }}</p>
+    }
+
+  <div class="ls-section-title">
+    <h2>This week</h2>
+  </div>
+
+  @if (data.meals().length === 0) {
+    <div class="ls-card">
+      <div class="ls-empty">
+        <p class="ls-empty-title">No meals planned</p>
+        <p class="ls-empty-hint">Use the form above to fill in your week — empty slots show as "—".</p>
+      </div>
+    </div>
+  }
+
+  <div class="meal-grid ls-card no-pad">
+    <div class="grid-row grid-head">
+      <span></span>
+      @for (day of days; track day) {
+        <span>{{ day }}</span>
+      }
+    </div>
+    @for (meal of mealTimes; track meal) {
+      <div class="grid-row">
+        <span class="grid-label">{{ meal }}</span>
+        @for (day of days; track day) {
+          <span
+            class="grid-cell"
+            [class.filled]="mealFor(day, meal)"
+            (click)="startEditMeal(day, meal)"
+            title="Tap to edit"
+          >
+            {{ mealFor(day, meal) || '—' }}
+          </span>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="ls-section-title">
+    <h2>Grocery checklist</h2>
+    <span class="ls-eyebrow">tick items off as you shop</span>
+  </div>
+
+  <form class="ls-card" [formGroup]="groceryForm" (ngSubmit)="addGrocery()">
+    <ion-item>
+      <ion-input label="Grocery item" labelPlacement="floating" formControlName="name" placeholder="e.g. Eggs, 1 dozen"></ion-input>
+    </ion-item>
+    <ion-button expand="block" fill="outline" shape="round" type="submit">Add to checklist</ion-button>
+  </form>
+
+  <div class="ls-card no-pad">
+    @if (data.groceries().length === 0) {
+      <div class="ls-empty">
+        <p class="ls-empty-title">Grocery list is empty</p>
+        <p class="ls-empty-hint">Add items above — tick them off as you shop.</p>
+      </div>
+    }
+    @for (item of data.groceries(); track item.id) {
+      <div class="ls-row accent-moss">
+        <p class="row-title" [class.done]="item.checked">{{ item.name }}</p>
+        <ion-checkbox
+          [checked]="item.checked"
+          (ionChange)="toggle(item.id)"
+        ></ion-checkbox>
+      </div>
+    }
+  </div>
+</ion-content>

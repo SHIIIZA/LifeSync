@@ -1,0 +1,138 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <p class="ls-eyebrow">This month</p>
+    <h1 class="ls-display page-title">Budget</h1>
+    <app-header-actions slot="end"></app-header-actions>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  @if (data.lastError()) {
+    <app-error-banner [message]="data.lastError()!" (onRetry)="data.retryConnection()"></app-error-banner>
+  }
+
+  @if (data.loading()) {
+    <app-loading-spinner></app-loading-spinner>
+  }
+
+  <div class="ls-card total-card">
+    <p class="total-label">Spent this month</p>
+    <p class="total-amount">${{ data.totalSpent() }} <span>/ ${{ data.totalLimit() }}</span></p>
+    @if (api.usdToPhp()) {
+      <p class="fx-note">1 USD ≈ ₱{{ api.usdToPhp() }} (live rate)</p>
+    }
+  </div>
+
+  <div class="ls-section-title">
+    <h2>Categories</h2>
+  </div>
+
+  <form class="ls-card" [formGroup]="catForm" (ngSubmit)="addCategory()">
+    <ion-item>
+      <ion-input label="Category name" labelPlacement="floating" formControlName="name"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input label="Monthly limit" labelPlacement="floating" formControlName="limit" inputmode="decimal"></ion-input>
+    </ion-item>
+    @if (catForm.invalid && catForm.touched) {
+      <p class="form-error">Enter a name and a numeric limit.</p>
+    }
+    <ion-button expand="block" fill="outline" shape="round" type="submit">Add category</ion-button>
+  </form>
+
+  @if (data.budgetCategories().length === 0) {
+    <div class="ls-empty ls-card">
+      <p class="ls-empty-title">No budget categories</p>
+      <p class="ls-empty-hint">Add a category like "Food" or "Transport" with a monthly limit to start tracking.</p>
+    </div>
+  }
+  @for (cat of data.budgetCategories(); track cat.id) {
+    <div class="ls-card cat-card" [class.over]="isOverThreshold(cat.spent, cat.limit)">
+      @if (editingCatId === cat.id) {
+        <div class="cat-edit-row">
+          <span class="cat-name">{{ cat.name }}</span>
+          <input
+            type="number"
+            class="limit-input"
+            [(ngModel)]="editLimitValue"
+            placeholder="New limit"
+            min="0"
+            step="0.01"
+          />
+          <ion-button size="small" (click)="saveCategoryLimit()">Save</ion-button>
+          <ion-button size="small" fill="clear" (click)="cancelEditCategory()">Cancel</ion-button>
+        </div>
+      } @else {
+        <div class="cat-head">
+          <p class="cat-name">{{ cat.name }}</p>
+          <p class="cat-amount">${{ cat.spent }} / ${{ cat.limit }}</p>
+        </div>
+        <div class="cat-bar">
+          <div
+            class="cat-bar-fill"
+            [class.over]="isOverThreshold(cat.spent, cat.limit)"
+            [style.width.%]="pct(cat.spent, cat.limit)"
+          ></div>
+        </div>
+        @if (isOverThreshold(cat.spent, cat.limit)) {
+          <p class="cat-warning">Nearing your {{ cat.name.toLowerCase() }} limit</p>
+        }
+        <ion-button
+          size="small"
+          fill="clear"
+          (click)="startEditCategory(cat)"
+          class="edit-btn"
+        >
+          Edit limit
+        </ion-button>
+      }
+    </div>
+  }
+
+  <div class="ls-section-title">
+    <h2>Quick entry</h2>
+  </div>
+
+  <form class="ls-card" [formGroup]="form" (ngSubmit)="submit()">
+    <ion-item>
+      <ion-input label="Label" labelPlacement="floating" formControlName="label"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input label="Amount (e.g. 12.50)" labelPlacement="floating" formControlName="amount" inputmode="decimal"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-select label="Category" labelPlacement="floating" formControlName="category">
+        @for (cat of data.budgetCategories(); track cat.id) {
+          <ion-select-option [value]="cat.name">{{ cat.name }}</ion-select-option>
+        }
+      </ion-select>
+    </ion-item>
+    @if (form.invalid && form.touched) {
+      <p class="form-error">Enter a label, a valid amount (digits, max 2 decimals), and a category.</p>
+    }
+    <ion-button expand="block" shape="round" type="submit">Add expense</ion-button>
+  </form>
+
+  <div class="ls-section-title">
+    <h2>Recent expenses</h2>
+  </div>
+
+  <div class="ls-card no-pad">
+    @if (data.expenses().length === 0) {
+      <div class="ls-empty">
+        <p class="ls-empty-title">No expenses logged</p>
+        <p class="ls-empty-hint">Use the quick-entry form above to log your first expense.</p>
+      </div>
+    }
+    @for (e of data.expenses(); track e.id) {
+      <div class="ls-row accent-clay">
+        <div class="row-body">
+          <p class="row-title">{{ e.label }}</p>
+          <p class="row-time">{{ e.category }} · {{ e.date }}</p>
+        </div>
+        <p class="row-amount">${{ e.amount.toFixed(2) }}</p>
+        <ion-button fill="clear" size="small" color="danger" (click)="remove(e.id)">Delete</ion-button>
+      </div>
+    }
+  </div>
+</ion-content>

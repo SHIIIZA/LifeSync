@@ -1,0 +1,127 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <div class="dash-title">
+      <p class="ls-eyebrow">Today</p>
+      <h1 class="ls-display">Hi, {{ data.userName() }}</h1>
+    </div>
+    <app-header-actions slot="end"></app-header-actions>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  @if (data.lastError()) {
+    <app-error-banner [message]="data.lastError()!" (onRetry)="data.retryConnection()"></app-error-banner>
+  }
+
+  @if (data.loading()) {
+    <app-loading-spinner></app-loading-spinner>
+  }
+
+  <div class="ls-card quote-card">
+    <p class="ls-eyebrow">Daily quote</p>
+    <p class="quote-text">“{{ api.quote() }}”</p>
+    <p class="quote-author">— {{ api.quoteAuthor() }}</p>
+  </div>
+
+  <div class="progress-card ls-card">
+    <div class="progress-ring" [style.--pct.%]="data.routineProgress()">
+      <span>{{ data.routineProgress() }}%</span>
+    </div>
+    <div class="progress-copy">
+      <h3>Routine on track</h3>
+      <p>
+        {{ data.routine().length }} items today — keep the streak going with
+        your medication reminder first.
+      </p>
+    </div>
+  </div>
+
+  <div class="ls-section-title">
+    <h2>Daily routine & checklist</h2>
+  </div>
+
+  <form class="ls-card" [formGroup]="form" (ngSubmit)="addItem()">
+    <ion-item>
+      <ion-input label="Item title" labelPlacement="floating" formControlName="title"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input label="Time (e.g. 7:30 AM)" labelPlacement="floating" formControlName="time"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-select label="Category" labelPlacement="floating" formControlName="category">
+        <ion-select-option value="study">Study</ion-select-option>
+        <ion-select-option value="chore">Chore</ion-select-option>
+        <ion-select-option value="medication">Medication</ion-select-option>
+        <ion-select-option value="personal">Personal</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-select label="Repeats" labelPlacement="floating" formControlName="recurring">
+        <ion-select-option value="none">Doesn't repeat</ion-select-option>
+        <ion-select-option value="daily">Daily</ion-select-option>
+        <ion-select-option value="weekly">Weekly</ion-select-option>
+      </ion-select>
+    </ion-item>
+    @if (form.invalid && form.touched) {
+      <p class="form-error">Enter a title and a time like "7:30 AM".</p>
+    }
+    <ion-button expand="block" shape="round" type="submit">Add to routine</ion-button>
+  </form>
+
+  <ion-button expand="block" fill="outline" shape="round" (click)="enableReminders()">
+    Enable pill reminders
+  </ion-button>
+  @if (reminderStatus) {
+    <p class="reminder-status">{{ reminderStatus }}</p>
+  }
+
+  <div class="ls-card no-pad">
+    @if (data.routine().length === 0) {
+      <div class="ls-empty">
+        <p class="ls-empty-title">Your checklist is empty</p>
+        <p class="ls-empty-hint">Add your first item with the form above — chores, study, medication, or personal.</p>
+      </div>
+    }
+    @for (item of data.routine(); track item.id) {
+      <div class="ls-row" [class]="accentFor(item.category)">
+        <ion-icon [name]="iconFor(item.category)" class="row-icon"></ion-icon>
+        <div class="row-body">
+          <p class="row-title" [class.done]="item.done">{{ item.title }}</p>
+          <p class="row-time">
+            {{ item.time }}
+            @if (item.requiresConfirmation) {
+              <span class="row-tag">confirm to log</span>
+            }
+            @if (item.recurring && item.recurring !== 'none') {
+              <span class="row-tag">{{ item.recurring }}</span>
+            }
+          </p>
+        </div>
+        <ion-checkbox
+          [checked]="item.done"
+          (ionChange)="toggle(item.id)"
+        ></ion-checkbox>
+      </div>
+    }
+  </div>
+
+  <div class="ls-section-title">
+    <h2>Habit streaks</h2>
+    <a routerLink="/tabs/habits">See all</a>
+  </div>
+
+  <div class="streak-row">
+    @if (data.habits().length === 0) {
+      <div class="ls-empty">
+        <p class="ls-empty-title">No habit streaks yet</p>
+        <p class="ls-empty-hint">Head to the Habits tab to add one and start a streak.</p>
+      </div>
+    }
+    @for (habit of data.habits(); track habit.id) {
+      <div class="streak-chip ls-card">
+        <p class="streak-days">{{ habit.streakDays }}<span>d</span></p>
+        <p class="streak-name">{{ habit.name }}</p>
+      </div>
+    }
+  </div>
+</ion-content>

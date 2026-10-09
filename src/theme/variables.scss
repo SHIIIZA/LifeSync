@@ -1,0 +1,92 @@
+// LifeSync design tokens
+// -----------------------------------------------------------------
+// Palette (named):
+//   --ls-paper   #EEEDE6  quiet warm-grey background, not stark white
+//   --ls-surface #FFFFFF  card/sheet surface
+//   --ls-ink     #22303C  primary text, deep blue-charcoal (not pure black)
+//   --ls-ink-60  #5B6B76  secondary text
+//   --ls-moss    #4B6B4F  study/planner + confirm actions
+//   --ls-clay    #C1613A  streaks, energy, gamified reward accent
+//   --ls-sky     #3E6E8E  calendar/schedule accent
+//   --ls-alert   #A63D33  budget overspend / overdue warnings
+//   --ls-line    #DCD9CF  hairline borders (flat, no drop shadows)
+// -----------------------------------------------------------------
+
+:root {
+  --ls-paper: #eeede6;
+  --ls-surface: #ffffff;
+  --ls-ink: #22303c;
+  --ls-ink-60: #5b6b76;
+  --ls-moss: #4b6b4f;
+  --ls-moss-tint: #e4ebe1;
+  --ls-clay: #c1613a;
+  --ls-clay-tint: #f3e2d6;
+  --ls-sky: #3e6e8e;
+  --ls-sky-tint: #dfe9ee;
+  --ls-alert: #a63d33;
+  --ls-alert-tint: #f3ddd9;
+  --ls-line: #dcd9cf;
+
+  --ls-font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --ls-font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  --ls-radius-sm: 10px;
+  --ls-radius-md: 14px;
+
+  /** Ionic color: primary -> ink (buttons, active tab, nav) */
+  --ion-color-primary: #22303c;
+  --ion-color-primary-rgb: 34, 48, 60;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #1e2a35;
+  --ion-color-primary-tint: #384450;
+
+  /** Ionic color: secondary -> moss (planner / confirm) */
+  --ion-color-secondary: #4b6b4f;
+  --ion-color-secondary-rgb: 75, 107, 79;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #425e46;
+  --ion-color-secondary-tint: #5d7a61;
+
+  /** Ionic color: tertiary -> sky (calendar) */
+  --ion-color-tertiary: #3e6e8e;
+  --ion-color-tertiary-rgb: 62, 110, 142;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #37617d;
+  --ion-color-tertiary-tint: #527d9a;
+
+  /** Ionic color: warning -> clay (streaks / gamification) */
+  --ion-color-warning: #c1613a;
+  --ion-color-warning-rgb: 193, 97, 58;
+  --ion-color-warning-contrast: #ffffff;
+  --ion-color-warning-contrast-rgb: 255, 255, 255;
+  --ion-color-warning-shade: #aa5533;
+  --ion-color-warning-tint: #c8714e;
+
+  /** Ionic color: danger -> alert (budget overspend) */
+  --ion-color-danger: #a63d33;
+  --ion-color-danger-rgb: 166, 61, 51;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #92362d;
+  --ion-color-danger-tint: #af5147;
+
+  /** Ionic color: success -> moss reused for completed states */
+  --ion-color-success: #4b6b4f;
+  --ion-color-success-rgb: 75, 107, 79;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #425e46;
+  --ion-color-success-tint: #5d7a61;
+
+  --ion-color-medium: #5b6b76;
+  --ion-color-light: #eeede6;
+
+  --ion-background-color: var(--ls-paper);
+  --ion-text-color: var(--ls-ink);
+  --ion-toolbar-background: var(--ls-paper);
+  --ion-item-background: transparent;
+  --ion-font-family: var(--ls-font-body);
+}

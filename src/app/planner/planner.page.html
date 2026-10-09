@@ -1,0 +1,95 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <p class="ls-eyebrow">Study & schedule</p>
+    <h1 class="ls-display page-title">Planner</h1>
+    <app-header-actions slot="end"></app-header-actions>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  @if (data.lastError()) {
+    <app-error-banner [message]="data.lastError()!" (onRetry)="data.retryConnection()"></app-error-banner>
+  }
+
+  @if (data.loading()) {
+    <app-loading-spinner></app-loading-spinner>
+  }
+
+  <form class="ls-card" [formGroup]="form" (ngSubmit)="addBlock()">
+    <ion-item>
+      <ion-input label="Course / task" labelPlacement="floating" formControlName="course"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input label='Time (e.g. "Today, 4:00 PM")' labelPlacement="floating" formControlName="time"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input label="Duration (min)" labelPlacement="floating" formControlName="durationMin" inputmode="numeric"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-select label="Priority" labelPlacement="floating" formControlName="priority">
+        <ion-select-option value="urgent">Urgent</ion-select-option>
+        <ion-select-option value="soon">Soon</ion-select-option>
+        <ion-select-option value="later">Later</ion-select-option>
+      </ion-select>
+    </ion-item>
+    @if (form.invalid && form.touched) {
+      <p class="form-error">Enter a course, a time like "Today, 4:00 PM", minutes, and a priority.</p>
+    }
+    <ion-button expand="block" shape="round" type="submit">
+      {{ editingId ? 'Save changes' : 'Add block' }}
+    </ion-button>
+    @if (editingId) {
+      <ion-button expand="block" fill="clear" shape="round" (click)="cancelEdit()">Cancel edit</ion-button>
+    }
+  </form>
+
+  <div class="ls-section-title">
+    <h2>Today's study blocks</h2>
+    <a routerLink="/calendar">Week view</a>
+  </div>
+
+  <div class="ls-card no-pad">
+    @if (data.studyBlocks().length === 0) {
+      <div class="ls-empty">
+        <p class="ls-empty-title">No study blocks scheduled</p>
+        <p class="ls-empty-hint">Add a course or task above to build your study plan.</p>
+      </div>
+    }
+    @for (block of data.studyBlocks(); track block.id) {
+      <div class="ls-row accent-sky">
+        <div class="row-body">
+          <p class="row-title">{{ block.course }}</p>
+          <p class="row-time">{{ block.time }} · {{ block.durationMin }} min</p>
+        </div>
+        <span class="priority-pill" [class]="block.priority">{{ block.priority }}</span>
+        <ion-button fill="clear" size="small" (click)="editBlock(block)">Edit</ion-button>
+        <ion-button fill="clear" size="small" color="danger" (click)="remove(block.id)">Delete</ion-button>
+      </div>
+    }
+  </div>
+
+  <div class="ls-section-title">
+    <h2>Priority matrix</h2>
+  </div>
+
+  <div class="matrix">
+    <div class="matrix-col urgent">
+      <p class="matrix-label">Do now</p>
+      @for (b of byPriority('urgent'); track b.id) {
+        <div class="matrix-card">{{ b.course }}</div>
+      }
+    </div>
+    <div class="matrix-col soon">
+      <p class="matrix-label">Do soon</p>
+      @for (b of byPriority('soon'); track b.id) {
+        <div class="matrix-card">{{ b.course }}</div>
+      }
+    </div>
+    <div class="matrix-col later">
+      <p class="matrix-label">Later</p>
+      @for (b of byPriority('later'); track b.id) {
+        <div class="matrix-card">{{ b.course }}</div>
+      }
+    </div>
+  </div>
+</ion-content>

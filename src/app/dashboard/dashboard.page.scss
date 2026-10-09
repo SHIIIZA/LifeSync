@@ -1,0 +1,115 @@
+.dash-title {
+  padding: 6px 16px 4px;
+
+  h1 { font-size: 24px; margin: 2px 0 0; }
+}
+
+.progress-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.progress-ring {
+  --pct: 0%;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: conic-gradient(var(--ls-moss) var(--pct), var(--ls-line) 0);
+
+  span {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--ls-surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--ls-font-display);
+    font-weight: 600;
+    font-size: 14px;
+  }
+}
+
+.progress-copy {
+  h3 { margin: 0 0 4px; font-size: 16px; }
+  p { margin: 0; font-size: 13px; color: var(--ls-ink-60); line-height: 1.4; }
+}
+
+.ls-card.no-pad {
+  padding: 0 14px;
+}
+
+.row-icon {
+  font-size: 18px;
+  color: var(--ls-ink-60);
+}
+
+.row-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.row-title {
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 500;
+
+  &.done {
+    text-decoration: line-through;
+    color: var(--ls-ink-60);
+  }
+}
+
+.row-time {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--ls-ink-60);
+}
+
+.row-tag {
+  margin-left: 6px;
+  color: var(--ls-alert);
+  font-weight: 500;
+}
+
+.streak-row {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.streak-chip {
+  min-width: 92px;
+  text-align: center;
+  padding: 14px 10px;
+}
+
+.streak-days {
+  font-family: var(--ls-font-display);
+  font-weight: 600;
+  font-size: 22px;
+  color: var(--ls-clay);
+  margin: 0;
+
+  span { font-size: 12px; color: var(--ls-ink-60); margin-left: 2px; }
+}
+
+.streak-name {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--ls-ink-60);
+}
+
+.form-error { margin: 8px 0; font-size: 12px; color: var(--ls-alert); }
+.reminder-status { font-size: 12px; color: var(--ls-ink-60); margin-top: 6px; }
+form ion-item { margin-bottom: 10px; }
+
+.quote-card { margin-bottom: 14px; }
+.quote-text { margin: 4px 0; font-size: 15px; font-style: italic; }
+.quote-author { margin: 0; font-size: 12px; color: var(--ls-ink-60); }

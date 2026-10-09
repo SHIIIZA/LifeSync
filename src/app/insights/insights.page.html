@@ -1,0 +1,86 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button fill="clear" (click)="back()">
+        <ion-icon name="chevron-back-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <p class="ls-eyebrow">Across all modules</p>
+    <h1 class="ls-display page-title">Insights</h1>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="stat-grid">
+    <div class="ls-card stat">
+      <p class="stat-value">{{ data.routineProgress() }}%</p>
+      <p class="stat-label">Routine completed today</p>
+    </div>
+    <div class="ls-card stat">
+      <p class="stat-value">${{ data.totalSpent() }}</p>
+      <p class="stat-label">Spent this month</p>
+    </div>
+    <div class="ls-card stat">
+      @if (data.habits().length) {
+        <p class="stat-value">{{ longestStreak() }}d</p>
+      } @else {
+        <p class="stat-value">—</p>
+      }
+      <p class="stat-label">Longest active streak</p>
+    </div>
+  </div>
+
+  <div class="ls-section-title">
+    <h2>Budget usage</h2>
+  </div>
+
+  <div class="ls-card">
+    <app-svg-chart [data]="budgetChartData()" emptyMessage="Add budget categories on the Budget page to see usage." />
+  </div>
+
+  <div class="ls-section-title">
+    <h2>Habit streaks</h2>
+  </div>
+
+  <div class="ls-card">
+    <app-svg-chart [data]="habitChartData()" emptyMessage="Add habits on the Habits page to track streaks." />
+  </div>
+
+  <div class="ls-section-title">
+    <h2>Study blocks by priority</h2>
+  </div>
+
+  <div class="ls-card">
+    <app-svg-chart [data]="studyChartData()" emptyMessage="Add study blocks on the Planner page to see priorities." />
+  </div>
+
+  <div class="ls-section-title">
+    <h2>What this week is telling you</h2>
+  </div>
+
+  @for (note of notes(); track note) {
+    <div class="ls-card insight-note">
+      <p>{{ note }}</p>
+    </div>
+  }
+  @if (notes().length === 0) {
+    <div class="ls-card insight-note">
+      <p>Add some routines, habits, budgets, or meals and your personalized insights will appear here.</p>
+    </div>
+  }
+
+  <div class="ls-section-title">
+    <h2>Data tools (XML / XSLT)</h2>
+  </div>
+
+  <div class="ls-card">
+    <p class="tool-label">Import routine items from an XML log</p>
+    <input type="file" accept=".xml" (change)="onImportFile($event)" />
+    @if (importStatus) {
+      <p class="import-status">{{ importStatus }}</p>
+    }
+    <ion-button expand="block" fill="outline" shape="round" (click)="exportReport()">
+      Export expenses as XSLT HTML report
+    </ion-button>
+  </div>
+</ion-content>

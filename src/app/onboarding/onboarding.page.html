@@ -1,0 +1,32 @@
+<ion-content class="ob-content" [fullscreen]="true">
+  <div class="ob-wrap">
+    <div class="ob-top">
+      <p class="ls-eyebrow">LifeSync</p>
+      <h1 class="ls-display ob-headline">One routine.<br />Every part of your day.</h1>
+      <p class="ob-sub">
+        Study blocks, habits, chores, and spending — synced into a single
+        daily view, so nothing slips through the cracks between apps.
+      </p>
+    </div>
+
+    <div class="ob-features">
+      <div class="ob-feature">
+        <ion-icon name="calendar-outline"></ion-icon>
+        <span>Plan study time and chores side by side</span>
+      </div>
+      <div class="ob-feature">
+        <ion-icon name="pulse-outline"></ion-icon>
+        <span>Keep habit streaks and reminders honest</span>
+      </div>
+      <div class="ob-feature">
+        <ion-icon name="wallet-outline"></ion-icon>
+        <span>Catch overspending before it happens</span>
+      </div>
+    </div>
+
+    <ion-button expand="block" shape="round" (click)="enter()">
+      Get started
+      <ion-icon slot="end" name="arrow-forward"></ion-icon>
+    </ion-button>
+  </div>
+</ion-content>

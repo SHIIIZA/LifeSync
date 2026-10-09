@@ -1,0 +1,55 @@
+
+.meal-grid { overflow-x: auto; padding: 10px; }
+
+.grid-row {
+  display: grid;
+  grid-template-columns: 64px repeat(7, 72px);
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.grid-head span {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--ls-ink-60);
+  text-align: center;
+}
+
+.grid-label {
+  font-size: 11px;
+  color: var(--ls-ink-60);
+  display: flex;
+  align-items: center;
+}
+
+.grid-cell {
+  background: var(--ls-paper);
+  border-radius: 6px;
+  font-size: 10px;
+  padding: 6px 4px;
+  text-align: center;
+  color: var(--ls-ink-60);
+  line-height: 1.2;
+
+  &.filled {
+    background: var(--ls-moss-tint);
+    color: var(--ls-ink);
+  }
+}
+
+.ls-card.no-pad { padding: 0 14px; }
+
+.row-title {
+  flex: 1;
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 500;
+
+  &.done {
+    text-decoration: line-through;
+    color: var(--ls-ink-60);
+  }
+}
+
+.form-error { margin: 8px 0; font-size: 12px; color: var(--ls-alert); }
+form ion-item { margin-bottom: 10px; }

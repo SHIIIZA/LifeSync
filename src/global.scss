@@ -1,0 +1,111 @@
+@import '@fontsource/space-grotesk/500.css';
+@import '@fontsource/space-grotesk/600.css';
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+
+h1, h2, h3, .ls-display {
+  font-family: var(--ls-font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ls-ink);
+}
+
+ion-content {
+  --background: var(--ls-paper);
+}
+
+// Header title used on every page — keeps titles aligned with the
+// persistent header-action chips and consistent across tabs.
+.page-title {
+  margin: 0;
+  padding: 4px 8px 6px;
+  font-size: 24px;
+}
+
+ion-toolbar {
+  --background: var(--ls-paper);
+  --color: var(--ls-ink);
+  padding: 8px 8px 4px;
+}
+
+// Persistent header action buttons — small bordered chips in the top right.
+app-header-actions ion-button {
+  --background: var(--ls-surface);
+  --color: var(--ls-ink);
+  --border-radius: 14px;
+  --padding-start: 0;
+  --padding-end: 0;
+  border: 1px solid var(--ls-line);
+  border-radius: 14px;
+  height: 44px;
+  width: 44px;
+  margin-inline-start: 8px;
+}
+
+app-header-actions ion-icon {
+  font-size: 22px;
+}
+
+// Flat, bordered surfaces instead of the default soft drop-shadow card.
+.ls-card {
+  background: var(--ls-surface);
+  border: 1px solid var(--ls-line);
+  border-radius: var(--ls-radius-md);
+  padding: 16px;
+  box-shadow: 0 1px 2px rgba(30, 30, 30, 0.04);
+}
+
+// A left color-bar row used across modules to encode category at a glance
+// (study = sky, habit = moss, budget = clay/alert) instead of a badge or icon soup.
+.ls-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 4px 12px 14px;
+  border-left: 3px solid var(--ls-line);
+  border-bottom: 1px solid var(--ls-line);
+
+  &:last-child { border-bottom: none; }
+
+  &.accent-sky { border-left-color: var(--ls-sky); }
+  &.accent-moss { border-left-color: var(--ls-moss); }
+  &.accent-clay { border-left-color: var(--ls-clay); }
+  &.accent-alert { border-left-color: var(--ls-alert); }
+}
+
+.ls-eyebrow {
+  font-size: 13px;
+  color: var(--ls-ink-60);
+  margin: 0 0 2px;
+}
+
+.ls-section-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 28px 0 10px;
+
+  h2 { font-size: 19px; margin: 0; }
+  a, ion-button { font-size: 13px; }
+}
+
+// Prevent iOS from auto-zooming when focusing form inputs.
+ion-input, ion-select, ion-textarea {
+  font-size: 16px;
+}
+
+// Friendly empty state used whenever a module has no data yet.
+.ls-empty {
+  text-align: center;
+  padding: 32px 16px;
+  color: var(--ls-ink-60);
+
+  .ls-empty-icon { font-size: 34px; opacity: 0.5; }
+  p.ls-empty-title { margin: 10px 0 4px; font-weight: 600; color: var(--ls-ink); }
+  p.ls-empty-hint { margin: 0; font-size: 13px; }
+}
+
+// Small helper text shown under inputs to guide the user.
+.ls-hint { margin: 6px 0 0; font-size: 12px; color: var(--ls-ink-60); }
+
