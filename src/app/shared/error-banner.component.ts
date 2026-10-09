@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IonButton, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { refreshOutline, alertCircleOutline } from 'ionicons/icons';
@@ -8,11 +8,11 @@ import { refreshOutline, alertCircleOutline } from 'ionicons/icons';
   standalone: true,
   imports: [IonButton, IonIcon],
   template: `
-    <div class="error-banner">
+    <div class="error-banner" role="alert" aria-live="assertive">
       <ion-icon name="alert-circle-outline" class="error-icon"></ion-icon>
       <p class="error-text">{{ message }}</p>
       @if (showRetry) {
-        <ion-button size="small" fill="outline" (click)="onRetry()">
+        <ion-button size="small" fill="outline" (click)="onRetry.emit()">
           <ion-icon name="refresh-outline" slot="start"></ion-icon>
           Retry
         </ion-button>
@@ -25,7 +25,7 @@ import { refreshOutline, alertCircleOutline } from 'ionicons/icons';
       align-items: center;
       gap: 10px;
       padding: 12px 14px;
-      background: #fff5f5;
+      background: var(--ls-alert-tint);
       border: 1px solid var(--ls-alert);
       border-radius: var(--ls-radius-md);
       margin-bottom: 14px;
@@ -37,12 +37,9 @@ import { refreshOutline, alertCircleOutline } from 'ionicons/icons';
 export class ErrorBannerComponent {
   @Input() message = 'Something went wrong.';
   @Input() showRetry = true;
+  @Output() onRetry = new EventEmitter<void>();
 
   constructor() {
     addIcons({ refreshOutline, alertCircleOutline });
-  }
-
-  onRetry() {
-    window.location.reload();
   }
 }

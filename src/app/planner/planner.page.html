@@ -33,7 +33,7 @@
       </ion-select>
     </ion-item>
     @if (form.invalid && form.touched) {
-      <p class="form-error">Enter a course, a time like "Today, 4:00 PM", minutes, and a priority.</p>
+      <p class="form-error" role="alert">Enter a course, a valid time (for example "Today, 4:00 PM"), a duration from 1 to 1440 minutes, and a priority.</p>
     }
     <ion-button expand="block" shape="round" type="submit">
       {{ editingId ? 'Save changes' : 'Add block' }}

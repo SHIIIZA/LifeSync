@@ -49,8 +49,8 @@ import { LoadingSpinnerComponent } from '../shared/loading-spinner.component';
 })
 export class HabitsPage {
   form = this.fb.group({
-    name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(40)]],
-    target: ['', [Validators.required, Validators.pattern(/^\d{1,4}$/)]],
+    name: ['', [Validators.required, Validators.pattern(/\S/), Validators.minLength(2), Validators.maxLength(40)]],
+    target: ['', [Validators.required, Validators.pattern(/^\d{1,4}$/), Validators.min(1)]],
     unit: ['glasses', [Validators.required]],
   });
 

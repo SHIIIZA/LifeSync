@@ -78,8 +78,8 @@ export class DashboardPage implements OnInit {
   };
 
   form = this.fb.group({
-    title: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(80)]],
-    time: ['', [Validators.required, Validators.pattern(/^\d{1,2}:\d{2}\s?(AM|PM)$/i)]],
+    title: ['', [Validators.required, Validators.pattern(/\S/), Validators.minLength(2), Validators.maxLength(80)]],
+    time: ['', [Validators.required, Validators.pattern(/^(0?[1-9]|1[0-2]):[0-5]\d\s?(AM|PM)$/i)]],
     category: ['personal' as RoutineCategory, [Validators.required]],
     recurring: ['none' as 'none' | 'daily' | 'weekly', [Validators.required]],
   });

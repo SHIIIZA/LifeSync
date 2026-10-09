@@ -63,8 +63,11 @@ A mobile-friendly personal productivity app built with **Angular 17 + Ionic 7 + 
 - Persistent Insights/Account header on every tab
 - Empty states, form hints, input validation + sanitization
 - Onboarding screen, mobile-friendly layout
+- Light/dark colors follow the device appearance setting; interactive controls use larger touch targets
 - Loading spinners + error banners with retry on all tab pages
 - Offline resilience: Firestore IndexedDB persistence, online/offline detection, retry UX
+- Invalid study-block edits, including impossible calendar dates, are blocked with a clear message
+- Authentication and account errors use user-safe messages rather than exposing backend details
 
 ---
 
@@ -114,6 +117,8 @@ npm start        # Dev server
 npm run build    # Production build
 npm test         # Run Karma tests
 ```
+
+The production build and Jasmine tests cover the app's current code paths. Validate device-specific layouts, notifications, and orientation behavior on at least one Android or iOS device before release.
 
 ### Native Builds
 

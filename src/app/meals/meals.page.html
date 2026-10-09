@@ -37,7 +37,7 @@
       <ion-input label="Ingredients (comma-separated)" labelPlacement="floating" formControlName="ingredients" placeholder="e.g. oats, banana, milk"></ion-input>
     </ion-item>
     @if (mealForm.invalid && mealForm.touched) {
-      <p class="form-error">Enter a meal name.</p>
+      <p class="form-error" role="alert">Enter a meal name with at least 2 characters.</p>
     }
     <p class="ls-hint">Adds or replaces the dish for that day's slot in the grid below.</p>
     <ion-button expand="block" shape="round" type="submit">
@@ -116,6 +116,7 @@
         <p class="row-title" [class.done]="item.checked">{{ item.name }}</p>
         <ion-checkbox
           [checked]="item.checked"
+          [attr.aria-label]="'Mark ' + item.name + (item.checked ? ' as not purchased' : ' as purchased')"
           (ionChange)="toggle(item.id)"
         ></ion-checkbox>
       </div>

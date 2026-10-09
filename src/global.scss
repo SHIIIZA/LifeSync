@@ -29,6 +29,30 @@ ion-toolbar {
   padding: 8px 8px 4px;
 }
 
+ion-content {
+  max-width: 760px;
+  margin-inline: auto;
+}
+
+ion-button {
+  --min-height: 44px;
+}
+
+ion-checkbox {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+button:focus-visible,
+a:focus-visible,
+ion-button:focus-visible,
+ion-checkbox:focus-visible,
+ion-input:focus-visible,
+ion-select:focus-visible {
+  outline: 3px solid var(--ls-sky);
+  outline-offset: 2px;
+}
+
 // Persistent header action buttons — small bordered chips in the top right.
 app-header-actions ion-button {
   --background: var(--ls-surface);
@@ -108,4 +132,3 @@ ion-input, ion-select, ion-textarea {
 
 // Small helper text shown under inputs to guide the user.
 .ls-hint { margin: 6px 0 0; font-size: 12px; color: var(--ls-ink-60); }
-

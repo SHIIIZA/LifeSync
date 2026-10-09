@@ -31,7 +31,7 @@
       </ion-select>
     </ion-item>
     @if (form.invalid && form.touched) {
-      <p class="form-error">Enter a name and a numeric daily target.</p>
+      <p class="form-error" role="alert">Enter a habit name and a daily target of at least 1.</p>
     }
     <p class="ls-hint">Example: name "Reading", target 30, unit "minutes".</p>
     <ion-button expand="block" shape="round" type="submit">

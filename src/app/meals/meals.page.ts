@@ -55,12 +55,12 @@ export class MealsPage {
   mealForm = this.fb.group({
     day: ['Mon', [Validators.required]],
     meal: ['Breakfast' as 'Breakfast' | 'Lunch' | 'Dinner', [Validators.required]],
-    name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(60)]],
+    name: ['', [Validators.required, Validators.pattern(/\S/), Validators.minLength(2), Validators.maxLength(60)]],
     ingredients: ['', []],
   });
 
   groceryForm = this.fb.group({
-    name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(60)]],
+    name: ['', [Validators.required, Validators.pattern(/\S/), Validators.minLength(2), Validators.maxLength(60)]],
   });
 
   editingMealId: string | null = null;

@@ -63,7 +63,7 @@
       </ion-select>
     </ion-item>
     @if (form.invalid && form.touched) {
-      <p class="form-error">Enter a title and a time like "7:30 AM".</p>
+      <p class="form-error" role="alert">Enter a title and a valid time like "7:30 AM" (hours 1–12, minutes 00–59).</p>
     }
     <ion-button expand="block" shape="round" type="submit">Add to routine</ion-button>
   </form>
@@ -99,6 +99,7 @@
         </div>
         <ion-checkbox
           [checked]="item.done"
+          [attr.aria-label]="'Mark ' + item.title + (item.done ? ' as not done' : ' as done')"
           (ionChange)="toggle(item.id)"
         ></ion-checkbox>
       </div>

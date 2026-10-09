@@ -35,7 +35,7 @@
       <ion-input label="Monthly limit" labelPlacement="floating" formControlName="limit" inputmode="decimal"></ion-input>
     </ion-item>
     @if (catForm.invalid && catForm.touched) {
-      <p class="form-error">Enter a name and a numeric limit.</p>
+      <p class="form-error" role="alert">Enter a category name and a limit greater than $0 (up to 2 decimal places).</p>
     }
     <ion-button expand="block" fill="outline" shape="round" type="submit">Add category</ion-button>
   </form>
@@ -57,11 +57,15 @@
             [(ngModel)]="editLimitValue"
             placeholder="New limit"
             min="0"
+            aria-label="New monthly limit"
             step="0.01"
           />
           <ion-button size="small" (click)="saveCategoryLimit()">Save</ion-button>
           <ion-button size="small" fill="clear" (click)="cancelEditCategory()">Cancel</ion-button>
         </div>
+        @if (editLimitError) {
+          <p class="form-error" role="alert">{{ editLimitError }}</p>
+        }
       } @else {
         <div class="cat-head">
           <p class="cat-name">{{ cat.name }}</p>
@@ -108,7 +112,7 @@
       </ion-select>
     </ion-item>
     @if (form.invalid && form.touched) {
-      <p class="form-error">Enter a label, a valid amount (digits, max 2 decimals), and a category.</p>
+      <p class="form-error" role="alert">Enter a label, an amount greater than $0 (up to 2 decimal places), and a category.</p>
     }
     <ion-button expand="block" shape="round" type="submit">Add expense</ion-button>
   </form>

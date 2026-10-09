@@ -92,18 +92,49 @@ export class LoginPage {
 
   async submit() {
     this.error = '';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email.trim()) || !this.password) {
+      this.error = 'Enter a valid email address and password.';
+      return;
+    }
+    if (this.mode === 'signup' && this.password.length < 6) {
+      this.error = 'Choose a password with at least 6 characters.';
+      return;
+    }
     this.loading = true;
     try {
       if (this.mode === 'login') {
-        await this.auth.login(this.email, this.password);
+        await this.auth.login(this.email.trim(), this.password);
       } else {
-        await this.auth.signup(this.email, this.password);
+        await this.auth.signup(this.email.trim(), this.password);
       }
       this.router.navigateByUrl('/tabs/dashboard');
-    } catch (e: any) {
-      this.error = e?.message ?? 'Authentication failed';
+    } catch (error: unknown) {
+      this.error = this.authErrorMessage(error);
     } finally {
       this.loading = false;
+    }
+  }
+
+  private authErrorMessage(error: unknown): string {
+    const code =
+      typeof error === 'object' && error !== null && 'code' in error
+        ? (error as { code?: unknown }).code
+        : undefined;
+    switch (code) {
+      case 'auth/invalid-email':
+        return 'Enter a valid email address.';
+      case 'auth/invalid-credential':
+      case 'auth/user-not-found':
+      case 'auth/wrong-password':
+        return 'The email or password is incorrect.';
+      case 'auth/email-already-in-use':
+        return 'An account already exists for this email.';
+      case 'auth/weak-password':
+        return 'Choose a stronger password with at least 6 characters.';
+      case 'auth/network-request-failed':
+        return 'Unable to connect. Check your internet connection and try again.';
+      default:
+        return 'Unable to sign in right now. Please try again.';
     }
   }
 }

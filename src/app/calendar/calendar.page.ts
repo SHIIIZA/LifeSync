@@ -27,6 +27,7 @@ import {
 import { FirestoreDataService } from '../data/firestore-data.service';
 import { StudyBlock } from '../models/lifesync.models';
 import { sanitizeText } from '../shared/sanitize';
+import { isValidStudyBlockDraft } from '../shared/validation';
 
 // Weekly calendar/schedule view of study blocks. Supports arbitrary dates
 // via the `date` field on StudyBlock, plus "Today, ..." / "Tomorrow, ..." strings.
@@ -144,6 +145,9 @@ import { sanitizeText } from '../shared/sanitize';
               <ion-item>
                 <ion-input label="Date (YYYY-MM-DD, optional)" labelPlacement="floating" [(ngModel)]="editForm.date"></ion-input>
               </ion-item>
+              @if (editError) {
+                <p class="form-error" role="alert">{{ editError }}</p>
+              }
               <ion-button expand="block" shape="round" (click)="saveEdit()">Save changes</ion-button>
               <ion-button expand="block" fill="clear" color="danger" shape="round" (click)="deleteBlock()">
                 <ion-icon name="trash-outline" slot="start"></ion-icon>
@@ -182,7 +186,7 @@ import { sanitizeText } from '../shared/sanitize';
       min-height: 64px;
     }
     .day-row:last-child { border-bottom: none; }
-    .day-row.today { background: #fff8f0; }
+    .day-row.today { background: var(--ls-moss-tint); }
     .day-label {
       flex: 0 0 64px;
       border-right: 1px solid var(--ls-line);
@@ -211,6 +215,7 @@ import { sanitizeText } from '../shared/sanitize';
     .cal-block-info { flex: 1; }
     .cal-edit-icon { font-size: 14px; color: var(--ls-ink-60); opacity: 0.5; }
     .unscheduled-item { margin: 4px 0; font-size: 13px; }
+    .form-error { margin: 8px 0; font-size: 13px; color: var(--ls-alert); }
   `],
 })
 export class CalendarPage {
@@ -224,6 +229,7 @@ export class CalendarPage {
     priority: 'soon' as StudyBlock['priority'],
     date: '',
   };
+  editError = '';
 
   constructor(
     public data: FirestoreDataService,
@@ -326,6 +332,7 @@ export class CalendarPage {
 
   openEdit(block: StudyBlock) {
     this.editingBlock.set(block);
+    this.editError = '';
     this.editForm = {
       course: block.course,
       time: block.time,
@@ -337,17 +344,27 @@ export class CalendarPage {
 
   closeEdit() {
     this.editingBlock.set(null);
+    this.editError = '';
   }
 
   async saveEdit() {
     const block = this.editingBlock();
     if (!block) return;
+    const course = sanitizeText(this.editForm.course);
+    const time = sanitizeText(this.editForm.time);
+    const durationMin = Number(this.editForm.durationMin);
+    const date = this.editForm.date.trim();
+    const draft = { ...this.editForm, course, time, durationMin, date };
+    if (!isValidStudyBlockDraft(draft)) {
+      this.editError = 'Check the course, time, duration (1–1440 minutes), priority, and date.';
+      return;
+    }
     await this.data.updateStudyBlock(block.id, {
-      course: sanitizeText(this.editForm.course),
-      time: sanitizeText(this.editForm.time),
-      durationMin: this.editForm.durationMin,
+      course,
+      time,
+      durationMin,
       priority: this.editForm.priority,
-      date: this.editForm.date || undefined,
+      date: date || undefined,
     });
     this.closeEdit();
   }

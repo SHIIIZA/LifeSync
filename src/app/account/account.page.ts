@@ -26,6 +26,7 @@ import {
 import { AuthService } from '../auth/auth.service';
 import { FirestoreDataService } from '../data/firestore-data.service';
 import { ToastController } from '@ionic/angular/standalone';
+import { sanitizeText } from '../shared/sanitize';
 
 @Component({
   selector: 'app-account',
@@ -163,9 +164,9 @@ export class AccountPage {
   }
 
   async saveName() {
-    const name = this.nameInput.trim();
-    if (!name) {
-      this.nameStatus = 'Name cannot be empty.';
+    const name = sanitizeText(this.nameInput);
+    if (name.length < 2 || name.length > 60) {
+      this.nameStatus = 'Enter a display name from 2 to 60 characters.';
       return;
     }
     this.savingName.set(true);
@@ -173,8 +174,8 @@ export class AccountPage {
       await this.auth.updateDisplayName(name);
       this.nameStatus = 'Display name updated.';
       this.editingName.set(false);
-    } catch (e: any) {
-      this.nameStatus = e?.message ?? 'Failed to update name.';
+    } catch {
+      this.nameStatus = 'Unable to update your display name. Please try again.';
     } finally {
       this.savingName.set(false);
     }
@@ -194,8 +195,8 @@ export class AccountPage {
         color: 'success',
       });
       await t.present();
-    } catch (e: any) {
-      this.resetStatus = e?.message ?? 'Failed to send reset email.';
+    } catch {
+      this.resetStatus = 'Unable to send the reset email. Please try again.';
     } finally {
       this.resettingPassword.set(false);
     }
@@ -208,8 +209,8 @@ export class AccountPage {
     try {
       await this.data.clearMyData();
       this.clearStatus = 'All data cleared.';
-    } catch (e: any) {
-      this.clearStatus = e?.message ?? 'Failed to clear data.';
+    } catch {
+      this.clearStatus = 'Unable to clear your data. Please try again.';
     }
   }
 

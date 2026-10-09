@@ -24,14 +24,14 @@ describe('ApiService', () => {
 
   it('should handle fetch failure gracefully', async () => {
     // Mock fetch to throw
-    spyOn(window, 'fetch').and.rejectValue(new Error('Network error'));
+    spyOn(window, 'fetch').and.returnValue(Promise.reject(new Error('Network error')));
     await service.loadDailyQuote();
     // Should keep fallback values
     expect(service.quote()).toBe('Start where you are. Use what you have.');
   });
 
   it('should handle non-ok response gracefully', async () => {
-    spyOn(window, 'fetch').and.resolveValue(new Response(null, { status: 500 }));
+    spyOn(window, 'fetch').and.returnValue(Promise.resolve(new Response(null, { status: 500 })));
     await service.loadDailyQuote();
     expect(service.quote()).toBe('Start where you are. Use what you have.');
   });

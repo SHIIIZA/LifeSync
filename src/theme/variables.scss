@@ -4,7 +4,7 @@
 //   --ls-paper   #EEEDE6  quiet warm-grey background, not stark white
 //   --ls-surface #FFFFFF  card/sheet surface
 //   --ls-ink     #22303C  primary text, deep blue-charcoal (not pure black)
-//   --ls-ink-60  #5B6B76  secondary text
+//   --ls-ink-60  #4F5E68  secondary text with stronger contrast
 //   --ls-moss    #4B6B4F  study/planner + confirm actions
 //   --ls-clay    #C1613A  streaks, energy, gamified reward accent
 //   --ls-sky     #3E6E8E  calendar/schedule accent
@@ -13,10 +13,11 @@
 // -----------------------------------------------------------------
 
 :root {
+  color-scheme: light;
   --ls-paper: #eeede6;
   --ls-surface: #ffffff;
   --ls-ink: #22303c;
-  --ls-ink-60: #5b6b76;
+  --ls-ink-60: #4f5e68;
   --ls-moss: #4b6b4f;
   --ls-moss-tint: #e4ebe1;
   --ls-clay: #c1613a;
@@ -89,4 +90,72 @@
   --ion-toolbar-background: var(--ls-paper);
   --ion-item-background: transparent;
   --ion-font-family: var(--ls-font-body);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --ls-paper: #151a1e;
+    --ls-surface: #20272d;
+    --ls-ink: #eff4f6;
+    --ls-ink-60: #bdc8ce;
+    --ls-moss: #91c39a;
+    --ls-moss-tint: #293d30;
+    --ls-clay: #f1a07c;
+    --ls-clay-tint: #432d26;
+    --ls-sky: #8bbddd;
+    --ls-sky-tint: #263b49;
+    --ls-alert: #ff9c90;
+    --ls-alert-tint: #472824;
+    --ls-line: #3d484f;
+
+    --ion-color-primary: #eff4f6;
+    --ion-color-primary-rgb: 239, 244, 246;
+    --ion-color-primary-contrast: #151a1e;
+    --ion-color-primary-contrast-rgb: 21, 26, 30;
+    --ion-color-primary-shade: #d2d7d9;
+    --ion-color-primary-tint: #f1f5f7;
+
+    --ion-color-secondary: #91c39a;
+    --ion-color-secondary-rgb: 145, 195, 154;
+    --ion-color-secondary-contrast: #172019;
+    --ion-color-secondary-contrast-rgb: 23, 32, 25;
+    --ion-color-secondary-shade: #80ab88;
+    --ion-color-secondary-tint: #9dcca5;
+
+    --ion-color-tertiary: #8bbddd;
+    --ion-color-tertiary-rgb: 139, 189, 221;
+    --ion-color-tertiary-contrast: #14202a;
+    --ion-color-tertiary-contrast-rgb: 20, 32, 42;
+    --ion-color-tertiary-shade: #7aa6c3;
+    --ion-color-tertiary-tint: #97c4e0;
+
+    --ion-color-warning: #f1a07c;
+    --ion-color-warning-rgb: 241, 160, 124;
+    --ion-color-warning-contrast: #24140e;
+    --ion-color-warning-contrast-rgb: 36, 20, 14;
+    --ion-color-warning-shade: #d48d6d;
+    --ion-color-warning-tint: #f2a989;
+
+    --ion-color-danger: #ff9c90;
+    --ion-color-danger-rgb: 255, 156, 144;
+    --ion-color-danger-contrast: #281310;
+    --ion-color-danger-contrast-rgb: 40, 19, 16;
+    --ion-color-danger-shade: #e08a7e;
+    --ion-color-danger-tint: #ffa79b;
+
+    --ion-color-success: #91c39a;
+    --ion-color-success-rgb: 145, 195, 154;
+    --ion-color-success-contrast: #172019;
+    --ion-color-success-contrast-rgb: 23, 32, 25;
+    --ion-color-success-shade: #80ab88;
+    --ion-color-success-tint: #9dcca5;
+
+    --ion-color-medium: #bdc8ce;
+    --ion-color-light: #20272d;
+    --ion-background-color: var(--ls-paper);
+    --ion-text-color: var(--ls-ink);
+    --ion-toolbar-background: var(--ls-paper);
+    --ion-item-background: transparent;
+  }
 }

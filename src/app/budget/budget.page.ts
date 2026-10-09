@@ -54,20 +54,21 @@ export class BudgetPage implements OnInit {
   form = this.fb.group({
     label: [
       '',
-      [Validators.required, Validators.minLength(2), Validators.maxLength(60)],
+      [Validators.required, Validators.pattern(/\S/), Validators.minLength(2), Validators.maxLength(60)],
     ],
     // digits with optional 1-2 decimal places
-    amount: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
-    category: ['', [Validators.required]],
+    amount: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/), Validators.min(0.01)]],
+    category: ['', [Validators.required, Validators.pattern(/\S/)]],
   });
 
   catForm = this.fb.group({
-    name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
-    limit: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+    name: ['', [Validators.required, Validators.pattern(/\S/), Validators.minLength(2), Validators.maxLength(30)]],
+    limit: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/), Validators.min(0.01)]],
   });
 
   editingCatId: string | null = null;
   editLimitValue = '';
+  editLimitError = '';
 
   constructor(
     public data: FirestoreDataService,
@@ -79,20 +80,26 @@ export class BudgetPage implements OnInit {
   startEditCategory(cat: { id: string; name: string; limit: number }) {
     this.editingCatId = cat.id;
     this.editLimitValue = String(cat.limit);
+    this.editLimitError = '';
   }
 
   cancelEditCategory() {
     this.editingCatId = null;
     this.editLimitValue = '';
+    this.editLimitError = '';
   }
 
   async saveCategoryLimit() {
     if (!this.editingCatId) return;
     const limit = parseFloat(this.editLimitValue);
-    if (isNaN(limit) || limit <= 0) return;
+    if (!Number.isFinite(limit) || limit <= 0) {
+      this.editLimitError = 'Enter a limit greater than $0.';
+      return;
+    }
     await this.data.updateBudgetCategory(this.editingCatId, { limit });
     this.editingCatId = null;
     this.editLimitValue = '';
+    this.editLimitError = '';
   }
 
   pct(spent: number, limit: number) {

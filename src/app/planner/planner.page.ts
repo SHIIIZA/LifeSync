@@ -47,9 +47,9 @@ import { LoadingSpinnerComponent } from '../shared/loading-spinner.component';
 })
 export class PlannerPage {
   form = this.fb.group({
-    course: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(80)]],
-    time: ['', [Validators.required, Validators.pattern(/^(Today|Tomorrow), .+/i)]],
-    durationMin: ['', [Validators.required, Validators.pattern(/^\d{1,3}$/)]],
+    course: ['', [Validators.required, Validators.pattern(/\S/), Validators.minLength(2), Validators.maxLength(80)]],
+    time: ['', [Validators.required, Validators.pattern(/^(Today|Tomorrow),\s*(0?[1-9]|1[0-2]):[0-5]\d\s?(AM|PM)$/i)]],
+    durationMin: ['', [Validators.required, Validators.pattern(/^\d{1,4}$/), Validators.min(1), Validators.max(1440)]],
     priority: ['soon' as StudyBlock['priority'], [Validators.required]],
   });
 
