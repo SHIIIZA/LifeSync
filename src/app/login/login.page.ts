@@ -11,6 +11,7 @@ import {
   IonItem,
   IonList,
   IonText,
+  IonSpinner,
 } from '@ionic/angular/standalone';
 import { AuthService } from '../auth/auth.service';
 
@@ -29,49 +30,79 @@ import { AuthService } from '../auth/auth.service';
     IonItem,
     IonList,
     IonText,
+    IonSpinner,
   ],
   template: `
     <ion-header class="ion-no-border">
       <ion-toolbar></ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-      <p class="ls-eyebrow">LifeSync</p>
-      <h1 class="ls-display">{{ mode === 'login' ? 'Welcome back' : 'Create account' }}</h1>
+      <div class="login-shell">
+        <div class="login-module">
+          <p class="ls-eyebrow">LifeSync</p>
+          <h1 class="ls-display">{{ mode === 'login' ? 'Welcome back' : 'Create account' }}</h1>
 
-      <ion-list>
-        <ion-item>
-          <ion-input
-            label="Email"
-            labelPlacement="floating"
-            type="email"
-            [(ngModel)]="email"
-            autocomplete="email"
-          ></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-input
-            label="Password"
-            labelPlacement="floating"
-            type="password"
-            [(ngModel)]="password"
-            [attr.autocomplete]="mode === 'login' ? 'current-password' : 'new-password'"
-          ></ion-input>
-        </ion-item>
-      </ion-list>
+          <ion-list>
+            <ion-item>
+              <ion-input
+                label="Email"
+                labelPlacement="floating"
+                type="email"
+                [(ngModel)]="email"
+                autocomplete="email"
+                [disabled]="loading"
+              ></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input
+                label="Password"
+                labelPlacement="floating"
+                type="password"
+                [(ngModel)]="password"
+                [attr.autocomplete]="mode === 'login' ? 'current-password' : 'new-password'"
+                [disabled]="loading"
+              ></ion-input>
+            </ion-item>
+          </ion-list>
 
-      @if (error) {
-        <ion-text color="danger"><p>{{ error }}</p></ion-text>
-      }
+          @if (error) {
+            <ion-text color="danger"><p role="alert" aria-live="assertive">{{ error }}</p></ion-text>
+          }
 
-      <ion-button expand="block" shape="round" (click)="submit()" [disabled]="loading">
-        {{ mode === 'login' ? 'Sign in' : 'Sign up' }}
-      </ion-button>
+          <ion-button
+            expand="block"
+            shape="round"
+            (click)="submit()"
+            [disabled]="loading"
+            [attr.aria-busy]="loading"
+          >
+            @if (loading) {
+              <ion-spinner name="crescent" slot="start"></ion-spinner>
+              {{ mode === 'login' ? 'Signing in…' : 'Creating account…' }}
+            } @else {
+              {{ mode === 'login' ? 'Sign in' : 'Sign up' }}
+            }
+          </ion-button>
 
-      <ion-button expand="block" fill="clear" (click)="toggleMode()">
-        {{ mode === 'login' ? 'Need an account? Sign up' : 'Have an account? Sign in' }}
-      </ion-button>
+          <ion-button expand="block" fill="clear" (click)="toggleMode()" [disabled]="loading">
+            {{ mode === 'login' ? 'Need an account? Sign up' : 'Have an account? Sign in' }}
+          </ion-button>
+        </div>
+      </div>
     </ion-content>
   `,
+  styles: [`
+    .login-shell {
+      min-height: 100%;
+      display: flex;
+      align-items: center;
+      padding-block: 24px;
+    }
+    .login-module { width: 100%; }
+    .login-module h1 { margin: 4px 0 24px; }
+    ion-list { background: transparent; margin-bottom: 16px; }
+    ion-button:first-of-type { --min-height: 52px; }
+  `],
 })
 export class LoginPage {
   email = '';

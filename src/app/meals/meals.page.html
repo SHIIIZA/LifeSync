@@ -59,7 +59,7 @@
     <h2>This week</h2>
   </div>
 
-  @if (data.meals().length === 0) {
+  @if (!data.loading() && !data.lastError() && data.meals().length === 0) {
     <div class="ls-card">
       <div class="ls-empty">
         <p class="ls-empty-title">No meals planned</p>
@@ -105,7 +105,7 @@
   </form>
 
   <div class="ls-card no-pad">
-    @if (data.groceries().length === 0) {
+    @if (!data.loading() && !data.lastError() && data.groceries().length === 0) {
       <div class="ls-empty">
         <p class="ls-empty-title">Grocery list is empty</p>
         <p class="ls-empty-hint">Add items above — tick them off as you shop.</p>

@@ -6,8 +6,8 @@ import { IonSpinner } from '@ionic/angular/standalone';
   standalone: true,
   imports: [IonSpinner],
   template: `
-    <div class="loading-container">
-      <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <div class="loading-container" role="status" aria-live="polite">
+      <ion-spinner name="crescent" color="primary" aria-hidden="true"></ion-spinner>
       <p>Loading...</p>
     </div>
   `,

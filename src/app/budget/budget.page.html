@@ -40,7 +40,7 @@
     <ion-button expand="block" fill="outline" shape="round" type="submit">Add category</ion-button>
   </form>
 
-  @if (data.budgetCategories().length === 0) {
+  @if (!data.loading() && !data.lastError() && data.budgetCategories().length === 0) {
     <div class="ls-empty ls-card">
       <p class="ls-empty-title">No budget categories</p>
       <p class="ls-empty-hint">Add a category like "Food" or "Transport" with a monthly limit to start tracking.</p>
@@ -122,7 +122,7 @@
   </div>
 
   <div class="ls-card no-pad">
-    @if (data.expenses().length === 0) {
+    @if (!data.loading() && !data.lastError() && data.expenses().length === 0) {
       <div class="ls-empty">
         <p class="ls-empty-title">No expenses logged</p>
         <p class="ls-empty-hint">Use the quick-entry form above to log your first expense.</p>

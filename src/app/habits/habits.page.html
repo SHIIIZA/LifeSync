@@ -42,7 +42,7 @@
     }
   </form>
 
-  @if (data.habits().length === 0) {
+  @if (!data.loading() && !data.lastError() && data.habits().length === 0) {
     <div class="ls-empty ls-card">
       <ion-icon name="pulse-outline" class="ls-empty-icon"></ion-icon>
       <p class="ls-empty-title">No habits yet</p>

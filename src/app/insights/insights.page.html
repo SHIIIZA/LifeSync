@@ -11,6 +11,11 @@
 </ion-header>
 
 <ion-content class="ion-padding">
+  @if (data.loading()) {
+    <app-loading-spinner></app-loading-spinner>
+  } @else if (data.lastError()) {
+    <app-error-banner [message]="data.lastError()!" (onRetry)="data.retryConnection()"></app-error-banner>
+  } @else {
   <div class="stat-grid">
     <div class="ls-card stat">
       <p class="stat-value">{{ data.routineProgress() }}%</p>
@@ -63,9 +68,12 @@
       <p>{{ note }}</p>
     </div>
   }
-  @if (notes().length === 0) {
+  @if (!hasSourceData()) {
     <div class="ls-card insight-note">
-      <p>Add some routines, habits, budgets, or meals and your personalized insights will appear here.</p>
+      <div class="ls-empty">
+        <p class="ls-empty-title">No insights yet</p>
+        <p class="ls-empty-hint">Add routines, habits, budgets, study blocks, or meals to see your personalized insights.</p>
+      </div>
     </div>
   }
 
@@ -83,4 +91,5 @@
       Export expenses as XSLT HTML report
     </ion-button>
   </div>
+  }
 </ion-content>

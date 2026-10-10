@@ -49,7 +49,7 @@
   </div>
 
   <div class="ls-card no-pad">
-    @if (data.studyBlocks().length === 0) {
+    @if (!data.loading() && !data.lastError() && data.studyBlocks().length === 0) {
       <div class="ls-empty">
         <p class="ls-empty-title">No study blocks scheduled</p>
         <p class="ls-empty-hint">Add a course or task above to build your study plan.</p>

@@ -28,6 +28,8 @@ import { FirestoreDataService } from '../data/firestore-data.service';
 import { StudyBlock } from '../models/lifesync.models';
 import { sanitizeText } from '../shared/sanitize';
 import { isValidStudyBlockDraft } from '../shared/validation';
+import { ErrorBannerComponent } from '../shared/error-banner.component';
+import { LoadingSpinnerComponent } from '../shared/loading-spinner.component';
 
 // Weekly calendar/schedule view of study blocks. Supports arbitrary dates
 // via the `date` field on StudyBlock, plus "Today, ..." / "Tomorrow, ..." strings.
@@ -49,6 +51,8 @@ import { isValidStudyBlockDraft } from '../shared/validation';
     IonSelect,
     IonSelectOption,
     IonTitle,
+    ErrorBannerComponent,
+    LoadingSpinnerComponent,
   ],
   template: `
     <ion-header class="ion-no-border">
@@ -78,6 +82,17 @@ import { isValidStudyBlockDraft } from '../shared/validation';
         </ion-button>
       </div>
 
+      @if (data.loading()) {
+        <app-loading-spinner></app-loading-spinner>
+      } @else if (data.lastError()) {
+        <app-error-banner [message]="data.lastError()!" (onRetry)="data.retryConnection()"></app-error-banner>
+      } @else if (data.studyBlocks().length === 0) {
+        <div class="ls-empty ls-card">
+          <ion-icon name="calendar-outline" class="ls-empty-icon"></ion-icon>
+          <p class="ls-empty-title">No study blocks yet</p>
+          <p class="ls-empty-hint">Add a block in Planner to see your schedule here.</p>
+        </div>
+      } @else {
       <!-- Day list -->
       <div class="week-list ls-card" style="padding:0">
         @for (d of days; track d.label) {
@@ -111,6 +126,7 @@ import { isValidStudyBlockDraft } from '../shared/validation';
             <p class="unscheduled-item">{{ b.course }} — {{ b.time }}</p>
           }
         </div>
+      }
       }
 
       <!-- Edit modal -->

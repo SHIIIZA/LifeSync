@@ -76,7 +76,7 @@
   }
 
   <div class="ls-card no-pad">
-    @if (data.routine().length === 0) {
+    @if (!data.loading() && !data.lastError() && data.routine().length === 0) {
       <div class="ls-empty">
         <p class="ls-empty-title">Your checklist is empty</p>
         <p class="ls-empty-hint">Add your first item with the form above — chores, study, medication, or personal.</p>
@@ -112,7 +112,7 @@
   </div>
 
   <div class="streak-row">
-    @if (data.habits().length === 0) {
+    @if (!data.loading() && !data.lastError() && data.habits().length === 0) {
       <div class="ls-empty">
         <p class="ls-empty-title">No habit streaks yet</p>
         <p class="ls-empty-hint">Head to the Habits tab to add one and start a streak.</p>

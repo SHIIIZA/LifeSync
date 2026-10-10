@@ -14,6 +14,8 @@ import { chevronBackOutline } from 'ionicons/icons';
 import { FirestoreDataService } from '../data/firestore-data.service';
 import { XmlReportService } from '../data/xml-report.service';
 import { SvgChartComponent, ChartDataPoint } from '../shared/svg-chart.component';
+import { ErrorBannerComponent } from '../shared/error-banner.component';
+import { LoadingSpinnerComponent } from '../shared/loading-spinner.component';
 
 @Component({
   selector: 'app-insights',
@@ -27,6 +29,8 @@ import { SvgChartComponent, ChartDataPoint } from '../shared/svg-chart.component
     IonButton,
     IonIcon,
     SvgChartComponent,
+    ErrorBannerComponent,
+    LoadingSpinnerComponent,
   ],
   templateUrl: './insights.page.html',
   styleUrl: './insights.page.scss',
@@ -37,6 +41,8 @@ export class InsightsPage {
   // Derived, real insights from the current data (no hardcoded copy).
   notes = computed(() => {
     const out: string[] = [];
+    if (!this.hasSourceData()) return out;
+
     const cats = this.data.budgetCategories();
     const over = cats.filter((c) => c.spent / Math.max(1, c.limit) >= 0.85);
     if (over.length) {
@@ -76,6 +82,16 @@ export class InsightsPage {
 
     return out;
   });
+
+  hasSourceData = computed(() =>
+    this.data.budgetCategories().length > 0 ||
+    this.data.studyBlocks().length > 0 ||
+    this.data.habits().length > 0 ||
+    this.data.routine().length > 0 ||
+    this.data.meals().length > 0 ||
+    this.data.expenses().length > 0 ||
+    this.data.groceries().length > 0,
+  );
 
   constructor(
     public data: FirestoreDataService,

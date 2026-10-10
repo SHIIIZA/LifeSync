@@ -27,6 +27,8 @@ import { AuthService } from '../auth/auth.service';
 import { FirestoreDataService } from '../data/firestore-data.service';
 import { ToastController } from '@ionic/angular/standalone';
 import { sanitizeText } from '../shared/sanitize';
+import { ErrorBannerComponent } from '../shared/error-banner.component';
+import { LoadingSpinnerComponent } from '../shared/loading-spinner.component';
 
 @Component({
   selector: 'app-account',
@@ -44,6 +46,8 @@ import { sanitizeText } from '../shared/sanitize';
     IonInput,
     IonItem,
     IonText,
+    ErrorBannerComponent,
+    LoadingSpinnerComponent,
   ],
   template: `
     <ion-header class="ion-no-border">
@@ -57,6 +61,12 @@ import { sanitizeText } from '../shared/sanitize';
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
+      @if (data.loading()) {
+        <app-loading-spinner></app-loading-spinner>
+      } @else if (data.lastError()) {
+        <app-error-banner [message]="data.lastError()!" (onRetry)="data.retryConnection()"></app-error-banner>
+      }
+
       <!-- Profile card -->
       <div class="ls-card">
         <p class="ls-eyebrow">Signed in as</p>
@@ -69,7 +79,11 @@ import { sanitizeText } from '../shared/sanitize';
         <p class="ls-eyebrow">Display name</p>
         @if (!editingName()) {
           <div class="name-row">
-            <p class="name-value">{{ auth.displayName() || 'Not set' }}</p>
+            @if (auth.displayName()) {
+              <p class="name-value">{{ auth.displayName() }}</p>
+            } @else {
+              <p class="name-value empty-name">Not set</p>
+            }
             <ion-button size="small" fill="outline" (click)="startEditName()">
               <ion-icon name="create-outline" slot="icon-only"></ion-icon>
               Edit
@@ -128,6 +142,7 @@ import { sanitizeText } from '../shared/sanitize';
     .uid-text { font-size: 12px; color: var(--ls-ink-60); word-break: break-all; }
     .name-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
     .name-value { margin: 0; font-size: 16px; font-weight: 500; }
+    .empty-name { color: var(--ls-ink-60); }
     .name-actions { display: flex; gap: 8px; margin-top: 8px; }
     .section-hint { font-size: 13px; color: var(--ls-ink-60); margin: 0 0 10px; }
     .status-text { font-size: 13px; color: var(--ls-moss); margin: 8px 0 0; }

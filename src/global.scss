@@ -35,6 +35,10 @@ ion-content {
 }
 
 ion-button {
+  --min-height: 48px;
+}
+
+ion-button[size="small"] {
   --min-height: 44px;
 }
 
