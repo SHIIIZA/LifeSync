@@ -30,6 +30,7 @@ import { sanitizeText } from '../shared/sanitize';
 import { isValidStudyBlockDraft } from '../shared/validation';
 import { ErrorBannerComponent } from '../shared/error-banner.component';
 import { LoadingSpinnerComponent } from '../shared/loading-spinner.component';
+import { ThemeToggleComponent } from '../shared/theme-toggle.component';
 
 // Weekly calendar/schedule view of study blocks. Supports arbitrary dates
 // via the `date` field on StudyBlock, plus "Today, ..." / "Tomorrow, ..." strings.
@@ -53,6 +54,7 @@ import { LoadingSpinnerComponent } from '../shared/loading-spinner.component';
     IonTitle,
     ErrorBannerComponent,
     LoadingSpinnerComponent,
+    ThemeToggleComponent,
   ],
   template: `
     <ion-header class="ion-no-border">
@@ -62,6 +64,7 @@ import { LoadingSpinnerComponent } from '../shared/loading-spinner.component';
             <ion-icon name="chevron-back-outline" slot="icon-only"></ion-icon>
           </ion-button>
         </ion-buttons>
+        <app-theme-toggle slot="end"></app-theme-toggle>
         <p class="ls-eyebrow">Schedule</p>
         <h1 class="ls-display page-title">Calendar</h1>
       </ion-toolbar>

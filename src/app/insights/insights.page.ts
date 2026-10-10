@@ -16,6 +16,7 @@ import { XmlReportService } from '../data/xml-report.service';
 import { SvgChartComponent, ChartDataPoint } from '../shared/svg-chart.component';
 import { ErrorBannerComponent } from '../shared/error-banner.component';
 import { LoadingSpinnerComponent } from '../shared/loading-spinner.component';
+import { ThemeToggleComponent } from '../shared/theme-toggle.component';
 
 @Component({
   selector: 'app-insights',
@@ -31,6 +32,7 @@ import { LoadingSpinnerComponent } from '../shared/loading-spinner.component';
     SvgChartComponent,
     ErrorBannerComponent,
     LoadingSpinnerComponent,
+    ThemeToggleComponent,
   ],
   templateUrl: './insights.page.html',
   styleUrl: './insights.page.scss',

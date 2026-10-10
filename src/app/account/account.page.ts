@@ -29,6 +29,7 @@ import { ToastController } from '@ionic/angular/standalone';
 import { sanitizeText } from '../shared/sanitize';
 import { ErrorBannerComponent } from '../shared/error-banner.component';
 import { LoadingSpinnerComponent } from '../shared/loading-spinner.component';
+import { ThemeToggleComponent } from '../shared/theme-toggle.component';
 
 @Component({
   selector: 'app-account',
@@ -48,6 +49,7 @@ import { LoadingSpinnerComponent } from '../shared/loading-spinner.component';
     IonText,
     ErrorBannerComponent,
     LoadingSpinnerComponent,
+    ThemeToggleComponent,
   ],
   template: `
     <ion-header class="ion-no-border">
@@ -57,6 +59,7 @@ import { LoadingSpinnerComponent } from '../shared/loading-spinner.component';
             <ion-icon name="chevron-back-outline" slot="icon-only"></ion-icon>
           </ion-button>
         </ion-buttons>
+        <app-theme-toggle slot="end"></app-theme-toggle>
         <h1 class="ls-display">Account</h1>
       </ion-toolbar>
     </ion-header>

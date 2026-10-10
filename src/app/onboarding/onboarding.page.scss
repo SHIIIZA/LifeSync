@@ -1,14 +1,22 @@
 .ob-content {
-  --background: var(--ls-ink);
+  --background: var(--ls-paper);
 }
 
 .ob-wrap {
+  position: relative;
   min-height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 48px 24px 32px;
-  color: #ffffff;
+  color: var(--ls-ink);
+}
+
+.ob-theme-toggle {
+  position: absolute;
+  top: max(8px, env(safe-area-inset-top));
+  right: 24px;
+  z-index: 2;
 }
 
 .ls-eyebrow {
@@ -22,12 +30,12 @@
 .ob-headline {
   font-size: 34px;
   line-height: 1.15;
-  color: #ffffff;
+  color: var(--ls-ink);
   margin: 8px 0 16px;
 }
 
 .ob-sub {
-  color: #c7cdd2;
+  color: var(--ls-ink-60);
   font-size: 15px;
   line-height: 1.5;
   max-width: 34ch;
@@ -45,7 +53,7 @@
   align-items: center;
   gap: 12px;
   font-size: 14px;
-  color: #e4e7ea;
+  color: var(--ls-ink);
 
   ion-icon {
     font-size: 20px;
@@ -55,9 +63,9 @@
 }
 
 ion-button {
-  --background: var(--ls-clay);
-  --background-hover: var(--ls-clay);
-  --color: #ffffff;
+  --background: var(--ion-color-primary);
+  --background-hover: var(--ion-color-primary);
+  --color: var(--ion-color-primary-contrast);
   font-family: var(--ls-font-display);
   font-weight: 600;
   height: 52px;

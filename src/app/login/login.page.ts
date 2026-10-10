@@ -14,6 +14,7 @@ import {
   IonSpinner,
 } from '@ionic/angular/standalone';
 import { AuthService } from '../auth/auth.service';
+import { ThemeToggleComponent } from '../shared/theme-toggle.component';
 
 @Component({
   selector: 'app-login',
@@ -31,10 +32,13 @@ import { AuthService } from '../auth/auth.service';
     IonList,
     IonText,
     IonSpinner,
+    ThemeToggleComponent,
   ],
   template: `
     <ion-header class="ion-no-border">
-      <ion-toolbar></ion-toolbar>
+      <ion-toolbar>
+        <app-theme-toggle slot="end"></app-theme-toggle>
+      </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
       <div class="login-shell">

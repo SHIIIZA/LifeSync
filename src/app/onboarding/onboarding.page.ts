@@ -7,11 +7,12 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { calendarOutline, walletOutline, pulseOutline, arrowForward } from 'ionicons/icons';
+import { ThemeToggleComponent } from '../shared/theme-toggle.component';
 
 @Component({
   selector: 'app-onboarding',
   standalone: true,
-  imports: [IonContent, IonButton, IonIcon],
+  imports: [IonContent, IonButton, IonIcon, ThemeToggleComponent],
   templateUrl: './onboarding.page.html',
   styleUrl: './onboarding.page.scss',
 })
