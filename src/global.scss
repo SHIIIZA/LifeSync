@@ -4,6 +4,101 @@
 @import '@fontsource/inter/500.css';
 @import '@fontsource/inter/600.css';
 
+@property --ls-paper {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #f5f1ff;
+}
+
+@property --ls-surface {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ffffff;
+}
+
+@property --ls-ink {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #2d1d4d;
+}
+
+@property --ls-ink-60 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #5d4b7d;
+}
+
+@property --ls-moss {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #6a4ca8;
+}
+
+@property --ls-moss-tint {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #f0e7ff;
+}
+
+@property --ls-clay {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #a987c9;
+}
+
+@property --ls-clay-tint {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #f0e8f8;
+}
+
+@property --ls-sky {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #8a63db;
+}
+
+@property --ls-sky-tint {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #efe7ff;
+}
+
+@property --ls-alert {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ad6687;
+}
+
+@property --ls-alert-tint {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #f5e8ef;
+}
+
+@property --ls-line {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #e4d9fb;
+}
+
+:root {
+  transition:
+    --ls-paper 350ms ease,
+    --ls-surface 350ms ease,
+    --ls-ink 350ms ease,
+    --ls-ink-60 350ms ease,
+    --ls-moss 350ms ease,
+    --ls-moss-tint 350ms ease,
+    --ls-clay 350ms ease,
+    --ls-clay-tint 350ms ease,
+    --ls-sky 350ms ease,
+    --ls-sky-tint 350ms ease,
+    --ls-alert 350ms ease,
+    --ls-alert-tint 350ms ease,
+    --ls-line 350ms ease;
+}
+
 h1, h2, h3, .ls-display {
   font-family: var(--ls-font-display);
   font-weight: 600;
