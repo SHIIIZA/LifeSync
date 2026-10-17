@@ -121,12 +121,17 @@ ion-content {
 ion-toolbar {
   --background: var(--ls-paper);
   --color: var(--ls-ink);
-  padding: 8px 8px 4px;
+  padding: 8px clamp(8px, 2vw, 24px) 4px;
 }
 
 ion-content {
-  max-width: 760px;
-  margin-inline: auto;
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+}
+
+.ion-padding {
+  --ion-padding: clamp(16px, 3vw, 32px);
 }
 
 ion-button {

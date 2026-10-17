@@ -100,10 +100,11 @@ import { ThemeToggleComponent } from '../shared/theme-toggle.component';
   styles: [`
     .login-shell {
       min-height: 100%;
+      box-sizing: border-box;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding-block: 24px;
+      padding-block: clamp(16px, 4vh, 32px);
     }
 
     .login-module {
@@ -115,7 +116,7 @@ import { ThemeToggleComponent } from '../shared/theme-toggle.component';
     }
 
     .brand-badge {
-      width: min(72vw, 320px);
+      width: min(72vw, 35vh, 320px);
       margin: 0 auto 4px;
       filter: drop-shadow(0 18px 32px rgba(45, 29, 77, 0.14));
     }
