@@ -46,6 +46,7 @@ import { LoadingSpinnerComponent } from '../shared/loading-spinner.component';
 })
 export class MealsPage {
   readonly days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  readonly daySelectOptions = { cssClass: 'day-picker-alert' };
   readonly mealTimes: Array<'Breakfast' | 'Lunch' | 'Dinner'> = [
     'Breakfast',
     'Lunch',

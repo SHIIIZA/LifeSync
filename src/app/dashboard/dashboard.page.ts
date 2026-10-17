@@ -29,6 +29,7 @@ import {
   checkmarkCircle,
 } from 'ionicons/icons';
 import { FirestoreDataService } from '../data/firestore-data.service';
+import { AuthService } from '../auth/auth.service';
 import { NotificationService } from '../notifications/notification.service';
 import { ApiService } from '../api/api.service';
 import { HeaderActionsComponent } from '../shared/header-actions.component';
@@ -92,6 +93,7 @@ export class DashboardPage implements OnInit {
 
   constructor(
     public data: FirestoreDataService,
+    public auth: AuthService,
     public api: ApiService,
     private notifications: NotificationService,
     private fb: FormBuilder,

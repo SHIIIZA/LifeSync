@@ -2,7 +2,7 @@
   <ion-toolbar>
     <div class="dash-title">
       <p class="ls-eyebrow">Today</p>
-      <h1 class="ls-display">Hi, {{ data.userName() }}</h1>
+      <h1 class="ls-display">Hi, {{ auth.displayName() || data.userName() }}</h1>
     </div>
     <app-header-actions slot="end"></app-header-actions>
   </ion-toolbar>

@@ -17,7 +17,13 @@
 
   <form class="ls-card" [formGroup]="mealForm" (ngSubmit)="addMeal()">
     <ion-item>
-      <ion-select label="Day" labelPlacement="floating" formControlName="day">
+      <ion-select
+        label="Day"
+        labelPlacement="floating"
+        formControlName="day"
+        interface="alert"
+        [interfaceOptions]="daySelectOptions"
+      >
         @for (d of days; track d) {
           <ion-select-option [value]="d">{{ d }}</ion-select-option>
         }
