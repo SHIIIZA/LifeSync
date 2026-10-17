@@ -44,7 +44,7 @@ import { sanitizeText } from '../shared/sanitize';
         <app-theme-toggle slot="end"></app-theme-toggle>
       </ion-toolbar>
     </ion-header>
-    <ion-content class="ion-padding">
+    <ion-content class="ion-padding" [scrollY]="true">
       <div class="login-shell">
         <div class="login-module">
           <div class="brand-badge">
@@ -303,7 +303,10 @@ export class LoginPage {
       } else {
         await this.auth.signup(email, this.password, sanitizeText(username));
       }
-      this.router.navigateByUrl('/tabs/dashboard');
+      const navigated = await this.router.navigateByUrl('/tabs/dashboard', { replaceUrl: true });
+      if (!navigated) {
+        this.error = 'Signed in, but unable to open your dashboard. Please reload the app.';
+      }
     } catch (error: unknown) {
       this.error = this.authErrorMessage(error, this.mode);
     } finally {

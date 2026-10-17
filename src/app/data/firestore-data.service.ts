@@ -10,6 +10,7 @@ import {
   deleteDoc,
   getDocs,
   enableIndexedDbPersistence,
+  type QueryDocumentSnapshot,
 } from '@angular/fire/firestore';
 import {
   BudgetCategory,
@@ -97,7 +98,6 @@ export class FirestoreDataService {
         return;
       }
       this.userName.set(user.email?.split('@')[0] ?? 'You');
-      this.resetRecurring();
       this.bindCollection<RoutineItem>('routine', this.routine);
       this.bindCollection<HabitStreak>('habits', this.habits);
       this.bindCollection<StudyBlock>('studyBlocks', this.studyBlocks);
@@ -120,6 +120,12 @@ export class FirestoreDataService {
       this.userDoc(name),
       (snap) => {
         target.set(snap.docs.map((d) => ({ ...(d.data() as T), id: d.id })));
+        if (name === 'routine') {
+          void this.resetRecurring(snap.docs).catch((err: unknown) => {
+            console.error('Firestore recurring routine reset error', err);
+            this.lastError.set('Could not reset recurring items — check your connection.');
+          });
+        }
         this.lastError.set(null);
         this.boundCollections++;
         if (this.boundCollections >= this.totalCollections) {
@@ -164,19 +170,19 @@ export class FirestoreDataService {
 
   // Recurring items that were completed in a previous period get reset to
   // not-done so the same routine reappears every day/week.
-  async resetRecurring() {
-    if (!this.uid) return;
+  async resetRecurring(docs: QueryDocumentSnapshot[] = []) {
     const now = Date.now();
-    const snap = await getDocs(this.userDoc('routine'));
-    for (const d of snap.docs) {
-      const item = d.data() as RoutineItem;
-      if (!item.done || !item.completedAt) continue;
-      if (item.recurring === 'daily' && now - item.completedAt > 24 * 3600e3) {
-        await updateDoc(d.ref, { done: false, completedAt: null });
-      } else if (item.recurring === 'weekly' && now - item.completedAt > 7 * 24 * 3600e3) {
-        await updateDoc(d.ref, { done: false, completedAt: null });
-      }
-    }
+    await Promise.all(
+      docs.map(async (d) => {
+        const item = d.data() as RoutineItem;
+        if (!item.done || !item.completedAt) return;
+        if (item.recurring === 'daily' && now - item.completedAt > 24 * 3600e3) {
+          await updateDoc(d.ref, { done: false, completedAt: null });
+        } else if (item.recurring === 'weekly' && now - item.completedAt > 7 * 24 * 3600e3) {
+          await updateDoc(d.ref, { done: false, completedAt: null });
+        }
+      }),
+    );
   }
 
   async logHabitProgress(id: string, amount: number) {

@@ -30,11 +30,14 @@ import { ThemeService } from './theme.service';
       --border-radius: 14px;
       --padding-start: 0;
       --padding-end: 0;
-      width: 44px;
-      height: 44px;
+      width: 48px;
+      height: 48px;
+      min-width: 48px;
+      min-height: 48px;
       margin: 0;
       border: 1px solid var(--ls-line);
       border-radius: 14px;
+      touch-action: manipulation;
     }
     ion-icon { font-size: 22px; }
   `],

@@ -1,12 +1,14 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <p class="ls-eyebrow">Study & schedule</p>
-    <h1 class="ls-display page-title">Planner</h1>
+    <div class="page-heading" slot="start">
+      <p class="ls-eyebrow">Study & schedule</p>
+      <h1 class="ls-display page-title">Planner</h1>
+    </div>
     <app-header-actions slot="end"></app-header-actions>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content class="ion-padding" [scrollY]="true">
   @if (data.lastError()) {
     <app-error-banner [message]="data.lastError()!" (onRetry)="data.retryConnection()"></app-error-banner>
   }

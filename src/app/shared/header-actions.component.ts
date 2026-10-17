@@ -11,16 +11,43 @@ import { ThemeToggleComponent } from './theme-toggle.component';
   standalone: true,
   imports: [RouterLink, IonButton, IonButtons, IonIcon, ThemeToggleComponent],
   template: `
-    <ion-buttons>
+    <ion-buttons class="header-buttons">
       <app-theme-toggle></app-theme-toggle>
-      <ion-button routerLink="/insights" fill="clear" title="Insights">
+      <ion-button routerLink="/insights" fill="clear" title="Insights" aria-label="Insights">
         <ion-icon name="stats-chart-outline" slot="icon-only"></ion-icon>
       </ion-button>
-      <ion-button routerLink="/account" fill="clear" title="Account">
+      <ion-button routerLink="/account" fill="clear" title="Account" aria-label="Account">
         <ion-icon name="person-outline" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
   `,
+  styles: [`
+    :host {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex: 0 0 auto;
+      align-items: center;
+      pointer-events: auto;
+    }
+
+    .header-buttons {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0;
+      pointer-events: auto;
+    }
+
+    ion-button {
+      flex: 0 0 48px;
+      width: 48px;
+      height: 48px;
+      margin: 0;
+      touch-action: manipulation;
+      pointer-events: auto;
+    }
+  `],
 })
 export class HeaderActionsComponent {
   constructor() {

@@ -10,7 +10,9 @@ A mobile-friendly personal productivity app built with **Angular 17 + Ionic 7 + 
 - Email/password sign-up with unique usernames; sign in using either username or email
 - Per-user private data in Firestore
 - Account page: display name editing, password reset, sign out, clear all data
-- Auth guards protect all app routes; guest guard redirects logged-in users
+- Startup restores the Firebase session before routing; logged-in users go straight to the dashboard and only signed-out users see onboarding
+- Auth guards protect all app routes
+- Branded startup splash with the LifeSync logo and “Fitness at your Fingertips” motto
 
 ### Dashboard
 - Daily routine checklist (add, toggle, recurring rules)
@@ -124,11 +126,23 @@ The production build and Jasmine tests cover the app's current code paths. Valid
 ### Native Builds
 
 ```bash
+npx cap add android  # Run once if the Android platform folder is missing
 npm run build
-npx cap sync
+npx cap sync android
+npx cap open android
 npx cap open ios      # Open in Xcode
-npx cap open android  # Open in Android Studio
 ```
+
+On Windows, regenerate the Android logo assets after adding the platform or syncing, then build a debug APK with JDK 18 selected:
+
+```powershell
+npm run build
+npx cap sync android
+.\scripts\generate-android-branding.ps1
+.\android\gradlew.bat -p .\android assembleDebug
+```
+
+The APK is written to `android\app\build\outputs\apk\debug\app-debug.apk`. The Android launcher icon and native splash are generated from `src\assets\lifesync-logo.png`; the web app then shows the branded splash while Firebase restores the saved session.
 
 ---
 

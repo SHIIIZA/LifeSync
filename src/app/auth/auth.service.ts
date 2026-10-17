@@ -10,7 +10,13 @@ import {
   updateProfile,
   User,
 } from '@angular/fire/auth';
-import { Firestore, doc, getDoc, runTransaction } from '@angular/fire/firestore';
+import {
+  Firestore,
+  deleteDoc,
+  doc,
+  getDoc,
+  runTransaction,
+} from '@angular/fire/firestore';
 
 class AuthFlowError extends Error {
   constructor(readonly code: string, message: string) {
@@ -60,14 +66,14 @@ export class AuthService {
       throw new AuthFlowError('auth/invalid-username', 'Invalid username.');
     }
     const credential = await createUserWithEmailAndPassword(this.auth, email, password);
-    try {
-      await updateProfile(credential.user, { displayName: trimmedUsername });
-      const usernameRef = doc(
-        this.firestore,
-        'usernames',
-        trimmedUsername.toLowerCase(),
-      );
-      await runTransaction(this.firestore, async (transaction) => {
+    const usernameRef = doc(
+      this.firestore,
+      'usernames',
+      trimmedUsername.toLowerCase(),
+    );
+    const [profileResult, usernameResult] = await Promise.allSettled([
+      updateProfile(credential.user, { displayName: trimmedUsername }),
+      runTransaction(this.firestore, async (transaction) => {
         const existing = await transaction.get(usernameRef);
         if (existing.exists()) {
           throw new AuthFlowError('auth/username-already-in-use', 'Username is taken.');
@@ -76,17 +82,34 @@ export class AuthService {
           uid: credential.user.uid,
           email: credential.user.email,
         });
-      });
-    } catch (error: unknown) {
+      }),
+    ]);
+
+    if (profileResult.status === 'rejected' || usernameResult.status === 'rejected') {
+      let cleanupFailed = false;
+      if (usernameResult.status === 'fulfilled') {
+        try {
+          await deleteDoc(usernameRef);
+        } catch {
+          cleanupFailed = true;
+        }
+      }
       try {
         await deleteUser(credential.user);
       } catch {
+        cleanupFailed = true;
+      }
+      if (cleanupFailed) {
         throw new AuthFlowError(
           'auth/signup-cleanup-failed',
           'Unable to clean up an incomplete account.',
         );
       }
-      throw error;
+      throw profileResult.status === 'rejected'
+        ? profileResult.reason
+        : usernameResult.status === 'rejected'
+          ? usernameResult.reason
+          : new Error('Account setup failed.');
     }
     this.displayName.set(trimmedUsername);
     return credential;

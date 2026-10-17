@@ -1,12 +1,14 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <p class="ls-eyebrow">Streaks & goals</p>
-    <h1 class="ls-display page-title">Habits</h1>
+    <div class="page-heading" slot="start">
+      <p class="ls-eyebrow">Streaks & goals</p>
+      <h1 class="ls-display page-title">Habits</h1>
+    </div>
     <app-header-actions slot="end"></app-header-actions>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content class="ion-padding" [scrollY]="true">
   @if (data.lastError()) {
     <app-error-banner [message]="data.lastError()!" (onRetry)="data.retryConnection()"></app-error-banner>
   }
@@ -15,7 +17,7 @@
     <app-loading-spinner></app-loading-spinner>
   }
 
-  <form class="ls-card" [formGroup]="form" (ngSubmit)="add()">
+  <form class="ls-card habit-form" [formGroup]="form" (ngSubmit)="add()">
     <ion-item>
       <ion-input label="Habit name" labelPlacement="floating" formControlName="name" placeholder="e.g. Water intake"></ion-input>
     </ion-item>
@@ -43,7 +45,7 @@
   </form>
 
   @if (!data.loading() && !data.lastError() && data.habits().length === 0) {
-    <div class="ls-empty ls-card">
+    <div class="ls-empty ls-card habit-empty">
       <ion-icon name="pulse-outline" class="ls-empty-icon"></ion-icon>
       <p class="ls-empty-title">No habits yet</p>
       <p class="ls-empty-hint">Add your first habit above to start building a streak.</p>

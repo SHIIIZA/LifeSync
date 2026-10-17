@@ -1,6 +1,6 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <div class="dash-title">
+    <div class="dash-title page-heading" slot="start">
       <p class="ls-eyebrow">Today</p>
       <h1 class="ls-display">Hi, {{ auth.displayName() || data.userName() }}</h1>
     </div>
@@ -8,7 +8,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content class="ion-padding" [scrollY]="true">
   @if (data.lastError()) {
     <app-error-banner [message]="data.lastError()!" (onRetry)="data.retryConnection()"></app-error-banner>
   }

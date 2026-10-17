@@ -70,7 +70,7 @@ import { ThemeToggleComponent } from '../shared/theme-toggle.component';
       </ion-toolbar>
     </ion-header>
 
-    <ion-content class="ion-padding">
+    <ion-content class="ion-padding" [scrollY]="true">
       <!-- Week navigation -->
       <div class="week-nav">
         <ion-button fill="clear" size="small" (click)="prevWeek()">
@@ -143,7 +143,7 @@ import { ThemeToggleComponent } from '../shared/theme-toggle.component';
               </ion-buttons>
             </ion-toolbar>
           </ion-header>
-          <ion-content class="ion-padding">
+          <ion-content class="ion-padding" [scrollY]="true">
             @if (editingBlock()) {
               <ion-item>
                 <ion-input label="Course" labelPlacement="floating" [(ngModel)]="editForm.course"></ion-input>

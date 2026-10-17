@@ -63,7 +63,7 @@ import { ThemeToggleComponent } from '../shared/theme-toggle.component';
         <h1 class="ls-display">Account</h1>
       </ion-toolbar>
     </ion-header>
-    <ion-content class="ion-padding">
+    <ion-content class="ion-padding" [scrollY]="true">
       @if (data.loading()) {
         <app-loading-spinner></app-loading-spinner>
       } @else if (data.lastError()) {

@@ -4,11 +4,12 @@ import { authGuard, guestGuard } from './auth/auth.guard';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'onboarding',
-    pathMatch: 'full',
+    loadComponent: () =>
+      import('./splash/splash.page').then((m) => m.SplashPage),
   },
   {
     path: 'onboarding',
+    canActivate: [guestGuard],
     loadComponent: () =>
       import('./onboarding/onboarding.page').then((m) => m.OnboardingPage),
   },
