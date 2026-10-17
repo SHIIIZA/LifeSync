@@ -30,8 +30,11 @@ export class AuthService {
     return signInWithEmailAndPassword(this.auth, email, password);
   }
 
-  signup(email: string, password: string) {
-    return createUserWithEmailAndPassword(this.auth, email, password);
+  async signup(email: string, password: string, displayName: string) {
+    const credential = await createUserWithEmailAndPassword(this.auth, email, password);
+    await updateProfile(credential.user, { displayName });
+    this.displayName.set(displayName);
+    return credential;
   }
 
   logout() {

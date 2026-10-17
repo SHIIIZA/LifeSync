@@ -12,9 +12,13 @@ import {
   IonList,
   IonText,
   IonSpinner,
+  IonIcon,
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { eyeOffOutline, eyeOutline } from 'ionicons/icons';
 import { AuthService } from '../auth/auth.service';
 import { ThemeToggleComponent } from '../shared/theme-toggle.component';
+import { sanitizeText } from '../shared/sanitize';
 
 @Component({
   selector: 'app-login',
@@ -31,6 +35,7 @@ import { ThemeToggleComponent } from '../shared/theme-toggle.component';
     IonList,
     IonText,
     IonSpinner,
+    IonIcon,
     ThemeToggleComponent,
   ],
   template: `
@@ -49,6 +54,18 @@ import { ThemeToggleComponent } from '../shared/theme-toggle.component';
           <h1 class="ls-display">{{ mode === 'login' ? 'Welcome back' : 'Create account' }}</h1>
 
           <ion-list>
+            @if (mode === 'signup') {
+              <ion-item>
+                <ion-input
+                  label="Username"
+                  labelPlacement="floating"
+                  type="text"
+                  [(ngModel)]="username"
+                  autocomplete="username"
+                  [disabled]="loading"
+                ></ion-input>
+              </ion-item>
+            }
             <ion-item>
               <ion-input
                 label="Email"
@@ -63,12 +80,52 @@ import { ThemeToggleComponent } from '../shared/theme-toggle.component';
               <ion-input
                 label="Password"
                 labelPlacement="floating"
-                type="password"
+                [type]="showPassword ? 'text' : 'password'"
                 [(ngModel)]="password"
                 [attr.autocomplete]="mode === 'login' ? 'current-password' : 'new-password'"
                 [disabled]="loading"
               ></ion-input>
+              <ion-button
+                fill="clear"
+                slot="end"
+                type="button"
+                [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+                [attr.title]="showPassword ? 'Hide password' : 'Show password'"
+                (click)="showPassword = !showPassword"
+              >
+                <ion-icon
+                  [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"
+                  slot="icon-only"
+                  aria-hidden="true"
+                ></ion-icon>
+              </ion-button>
             </ion-item>
+            @if (mode === 'signup') {
+              <ion-item>
+                <ion-input
+                  label="Confirm password"
+                  labelPlacement="floating"
+                  [type]="showConfirmPassword ? 'text' : 'password'"
+                  [(ngModel)]="confirmPassword"
+                  autocomplete="new-password"
+                  [disabled]="loading"
+                ></ion-input>
+                <ion-button
+                  fill="clear"
+                  slot="end"
+                  type="button"
+                  [attr.aria-label]="showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'"
+                  [attr.title]="showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'"
+                  (click)="showConfirmPassword = !showConfirmPassword"
+                >
+                  <ion-icon
+                    [name]="showConfirmPassword ? 'eye-off-outline' : 'eye-outline'"
+                    slot="icon-only"
+                    aria-hidden="true"
+                  ></ion-icon>
+                </ion-button>
+              </ion-item>
+            }
           </ion-list>
 
           @if (error) {
@@ -142,16 +199,25 @@ import { ThemeToggleComponent } from '../shared/theme-toggle.component';
     }
 
     ion-item {
-      --background: rgba(255, 255, 255, 0.52);
+      --background: var(--ls-surface);
+      --color: var(--ls-ink);
       --border-color: var(--ls-line);
-      --highlight-color-focused: var(--ls-sky);
+      --highlight-color-focused: var(--ls-ink);
       margin-bottom: 8px;
       border-radius: 14px;
     }
 
     ion-input {
-      --placeholder-color: var(--ls-ink-60);
       --color: var(--ls-ink);
+      --placeholder-color: var(--ls-ink-60);
+      --placeholder-opacity: 1;
+      --highlight-color-focused: var(--ls-ink);
+      --highlight-color-valid: var(--ls-ink);
+      --highlight-color-invalid: var(--ls-alert);
+    }
+
+    ion-item ion-button {
+      --color: var(--ls-ink-60);
     }
 
     ion-button:first-of-type {
@@ -168,16 +234,22 @@ import { ThemeToggleComponent } from '../shared/theme-toggle.component';
   `],
 })
 export class LoginPage {
+  username = '';
   email = '';
   password = '';
+  confirmPassword = '';
   mode: 'login' | 'signup' = 'login';
+  showPassword = false;
+  showConfirmPassword = false;
   error = '';
   loading = false;
 
   constructor(
     private auth: AuthService,
     private router: Router,
-  ) {}
+  ) {
+    addIcons({ eyeOutline, eyeOffOutline });
+  }
 
   toggleMode() {
     this.mode = this.mode === 'login' ? 'signup' : 'login';
@@ -186,12 +258,25 @@ export class LoginPage {
 
   async submit() {
     this.error = '';
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email.trim()) || !this.password) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email.trim())) {
+      this.error = 'Enter a valid email address.';
+      return;
+    }
+    if (!this.password) {
       this.error = 'Enter a valid email address and password.';
+      return;
+    }
+    const displayName = sanitizeText(this.username);
+    if (this.mode === 'signup' && (displayName.length < 2 || displayName.length > 60)) {
+      this.error = 'Choose a username from 2 to 60 characters.';
       return;
     }
     if (this.mode === 'signup' && this.password.length < 6) {
       this.error = 'Choose a password with at least 6 characters.';
+      return;
+    }
+    if (this.mode === 'signup' && this.password !== this.confirmPassword) {
+      this.error = 'Passwords do not match.';
       return;
     }
     this.loading = true;
@@ -199,7 +284,7 @@ export class LoginPage {
       if (this.mode === 'login') {
         await this.auth.login(this.email.trim(), this.password);
       } else {
-        await this.auth.signup(this.email.trim(), this.password);
+        await this.auth.signup(this.email.trim(), this.password, displayName);
       }
       this.router.navigateByUrl('/tabs/dashboard');
     } catch (error: unknown) {
