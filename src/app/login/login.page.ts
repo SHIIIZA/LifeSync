@@ -65,17 +65,28 @@ import { sanitizeText } from '../shared/sanitize';
                   [disabled]="loading"
                 ></ion-input>
               </ion-item>
+              <ion-item>
+                <ion-input
+                  label="Email"
+                  labelPlacement="floating"
+                  type="email"
+                  [(ngModel)]="email"
+                  autocomplete="email"
+                  [disabled]="loading"
+                ></ion-input>
+              </ion-item>
+            } @else {
+              <ion-item>
+                <ion-input
+                  label="Username or email"
+                  labelPlacement="floating"
+                  type="text"
+                  [(ngModel)]="loginIdentifier"
+                  autocomplete="username"
+                  [disabled]="loading"
+                ></ion-input>
+              </ion-item>
             }
-            <ion-item>
-              <ion-input
-                label="Email"
-                labelPlacement="floating"
-                type="email"
-                [(ngModel)]="email"
-                autocomplete="email"
-                [disabled]="loading"
-              ></ion-input>
-            </ion-item>
             <ion-item>
               <ion-input
                 label="Password"
@@ -236,6 +247,7 @@ import { sanitizeText } from '../shared/sanitize';
 export class LoginPage {
   username = '';
   email = '';
+  loginIdentifier = '';
   password = '';
   confirmPassword = '';
   mode: 'login' | 'signup' = 'login';
@@ -258,17 +270,22 @@ export class LoginPage {
 
   async submit() {
     this.error = '';
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email.trim())) {
+    if (!this.password) {
+      this.error = 'Enter your password.';
+      return;
+    }
+    const username = this.username.trim();
+    const email = this.email.trim();
+    if (this.mode === 'login' && !this.loginIdentifier.trim()) {
+      this.error = 'Enter your username or email.';
+      return;
+    }
+    if (this.mode === 'signup' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       this.error = 'Enter a valid email address.';
       return;
     }
-    if (!this.password) {
-      this.error = 'Enter a valid email address and password.';
-      return;
-    }
-    const displayName = sanitizeText(this.username);
-    if (this.mode === 'signup' && (displayName.length < 2 || displayName.length > 60)) {
-      this.error = 'Choose a username from 2 to 60 characters.';
+    if (this.mode === 'signup' && !/^[a-zA-Z0-9._-]{2,30}$/.test(username)) {
+      this.error = 'Use 2 to 30 letters, numbers, periods, underscores, or hyphens for your username.';
       return;
     }
     if (this.mode === 'signup' && this.password.length < 6) {
@@ -282,19 +299,19 @@ export class LoginPage {
     this.loading = true;
     try {
       if (this.mode === 'login') {
-        await this.auth.login(this.email.trim(), this.password);
+        await this.auth.login(this.loginIdentifier.trim(), this.password);
       } else {
-        await this.auth.signup(this.email.trim(), this.password, displayName);
+        await this.auth.signup(email, this.password, sanitizeText(username));
       }
       this.router.navigateByUrl('/tabs/dashboard');
     } catch (error: unknown) {
-      this.error = this.authErrorMessage(error);
+      this.error = this.authErrorMessage(error, this.mode);
     } finally {
       this.loading = false;
     }
   }
 
-  private authErrorMessage(error: unknown): string {
+  private authErrorMessage(error: unknown, mode: 'login' | 'signup'): string {
     const code =
       typeof error === 'object' && error !== null && 'code' in error
         ? (error as { code?: unknown }).code
@@ -305,15 +322,30 @@ export class LoginPage {
       case 'auth/invalid-credential':
       case 'auth/user-not-found':
       case 'auth/wrong-password':
-        return 'The email or password is incorrect.';
+        return 'The username/email or password is incorrect.';
       case 'auth/email-already-in-use':
         return 'An account already exists for this email.';
+      case 'auth/username-already-in-use':
+        return 'That username is already taken. Choose another one.';
+      case 'auth/invalid-username':
+        return 'Use 2 to 30 letters, numbers, periods, underscores, or hyphens for your username.';
+      case 'auth/signup-cleanup-failed':
+        return 'Unable to finish sign-up and clean up the incomplete account. Please contact support before trying again.';
       case 'auth/weak-password':
         return 'Choose a stronger password with at least 6 characters.';
       case 'auth/network-request-failed':
         return 'Unable to connect. Check your internet connection and try again.';
+      case 'auth/operation-not-allowed':
+        return 'Email/password sign-in is not enabled for this Firebase project. Enable it in Firebase Authentication settings.';
+      case 'auth/unauthorized-domain':
+        return 'This app domain is not authorized in Firebase Authentication settings.';
+      case 'permission-denied':
+      case 'firestore/permission-denied':
+        return 'Firebase blocked the username lookup. Deploy the latest firestore.rules to your Firebase project, then try again.';
       default:
-        return 'Unable to sign in right now. Please try again.';
+        return mode === 'signup'
+          ? 'Unable to create your account right now. Please try again.'
+          : 'Unable to sign in right now. Please try again.';
     }
   }
 }

@@ -7,7 +7,8 @@ A mobile-friendly personal productivity app built with **Angular 17 + Ionic 7 + 
 ## Features
 
 ### Accounts & Data
-- Email/password sign-up & login, per-user private data in Firestore
+- Email/password sign-up with unique usernames; sign in using either username or email
+- Per-user private data in Firestore
 - Account page: display name editing, password reset, sign out, clear all data
 - Auth guards protect all app routes; guest guard redirects logged-in users
 
@@ -134,6 +135,8 @@ npx cap open android  # Open in Android Studio
 ## Environment
 
 Firebase config lives in `src/environments/environment.ts`. Replace the placeholder values with your real Firebase Console config.
+
+Deploy `firestore.rules` when configuring Firebase. Username sign-in uses a Firestore `usernames` index that stores each username's email and Firebase Auth UID. The rules allow logged-out clients to read one exact username record (needed to resolve sign-in), but disallow listing the collection and restrict writes to the matching signed-in account. As a result, username/email pairs are not private from someone who knows or guesses a username.
 
 ---
 
