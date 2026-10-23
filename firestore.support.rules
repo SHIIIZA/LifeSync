@@ -1,0 +1,46 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isOwner(data) {
+      return request.auth != null
+        && data.submitterUid == request.auth.uid;
+    }
+
+    function validSupportRequest() {
+      let data = request.resource.data;
+      return data.keys().hasAll([
+          'name', 'email', 'topic', 'reference', 'message', 'submitterUid', 'createdAt'
+        ])
+        && data.keys().hasOnly([
+          'name', 'email', 'topic', 'reference', 'message', 'submitterUid', 'createdAt'
+        ])
+        && data.name is string
+        && data.name.size() >= 2
+        && data.name.size() <= 80
+        && data.email is string
+        && data.email.size() <= 254
+        && data.email.matches('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$')
+        && data.topic in ['Account', 'App issue', 'Data or sync', 'Feature request', 'Other']
+        && data.reference is string
+        && data.reference.size() <= 40
+        && data.message is string
+        && data.message.size() >= 12
+        && data.message.size() <= 3000
+        && data.submitterUid == request.auth.uid
+        && data.createdAt == request.time;
+    }
+
+    match /supportRequests/{requestId} {
+      allow get: if resource == null || isOwner(resource.data);
+      allow list: if false;
+      allow create: if request.auth != null
+        && requestId.matches('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89aAbB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$')
+        && validSupportRequest();
+      allow update, delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -65,6 +65,7 @@ A mobile-friendly personal productivity app built with **Angular 17 + Ionic 7 + 
 ### Shared
 - Persistent Insights/Account header on every tab
 - Empty states, form hints, input validation + sanitization
+- Accessible Contact Us form that saves support requests to a separate Firebase project
 - Onboarding screen, mobile-friendly layout
 - Light/dark colors follow the device appearance setting; interactive controls use larger touch targets
 - Loading spinners + error banners with retry on all tab pages
@@ -96,6 +97,7 @@ src/app/
 ├── auth/             # Auth service + route guards
 ├── budget/           # Budget page (categories, expenses, limits)
 ├── calendar/         # Calendar page (week view, edit modal)
+├── contact/           # Accessible support form + callable email client
 ├── dashboard/        # Dashboard (routine, reminders, quote)
 ├── data/             # Firestore data service + XML report service
 ├── habits/           # Habits page (add/edit/delete, streaks)
@@ -151,6 +153,43 @@ The APK is written to `android\app\build\outputs\apk\debug\app-debug.apk`. The A
 Firebase config lives in `src/environments/environment.ts`. Replace the placeholder values with your real Firebase Console config.
 
 Deploy `firestore.rules` when configuring Firebase. Username sign-in uses a Firestore `usernames` index that stores each username's email and Firebase Auth UID. The rules allow logged-out clients to read one exact username record (needed to resolve sign-in), but disallow listing the collection and restrict writes to the matching signed-in account. As a result, username/email pairs are not private from someone who knows or guesses a username.
+
+### Free Contact Us inbox setup
+
+Contact Us stores support requests directly in the separate `lifesync-support` Firestore project. LifeSync sign-in and personal data remain in `lifesync-f8691`; Contact Us uses a separate Firebase app and anonymous support-project authentication. The app can save/read back only the submitting user's request; it cannot list, change, or delete support requests. After saving, the app opens an email draft addressed to `ianlancemgeronimo@gmail.com`, prefilled with the request. The sender must press Send; no automatic email service or paid Firebase plan is used. A fallback link is shown if the device does not open the draft automatically.
+
+#### One-time setup in the free support project
+
+1. Confirm the selected Firebase project is `lifesync-support`, not the existing account/data project.
+2. Create **Firestore Database** in production mode. The database location cannot be changed after creation; choose the region carefully.
+3. In **Authentication → Sign-in method**, enable **Anonymous** sign-in. This is used only to give each app installation an identity in the separate support project; it does not sign the user into their LifeSync account.
+4. From the repository root, install or use Firebase CLI and sign in with an account that can administer the support project:
+
+   ```bash
+   npm install --global firebase-tools
+   firebase login
+   firebase projects:list
+   ```
+
+   Verify `lifesync-support` appears in the list. Then deploy only the support Firestore rules and indexes using the dedicated config:
+
+   ```bash
+   firebase --config firebase.support.json deploy --only firestore:rules,firestore:indexes --project lifesync-support
+   ```
+
+   Do not use the regular `firebase.json` for this deployment; it contains the separate account/data project's Firestore rules.
+5. Build and install the updated app:
+
+   ```powershell
+   npm.cmd run build
+   npx.cmd cap sync android
+   .\android\gradlew.bat -p .\android assembleDebug
+   ```
+
+   Install `android\app\build\outputs\apk\debug\app-debug.apk`. For the website, deploy the newly built browser files using the team's existing web hosting process.
+6. Submit a test request, then check **Firestore Database → `supportRequests`** in the support project. New requests are stored with a `createdAt` timestamp and sender information. The app then opens a prefilled email draft; press Send to deliver it to the support inbox. If no email app opens, use the fallback link on the confirmation.
+
+The form retains its contents after a failed save. Retrying the unchanged request uses the same document ID, so an already-saved message is recognized rather than duplicated. Rules allow each anonymous support identity to read only its own submitted document; support messages cannot be listed or changed by app clients. The team should establish a retention policy and remove old requests through the Firebase Console. Spark is free only within Firebase's current quota limits; public app traffic can consume Firestore quota, so monitor usage and keep the support rules deployed.
 
 ---
 

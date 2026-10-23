@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IonButton, IonButtons, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { statsChartOutline, personOutline } from 'ionicons/icons';
+import { statsChartOutline, personOutline, mailOutline } from 'ionicons/icons';
 import { ThemeToggleComponent } from './theme-toggle.component';
 
 // Persistent top-right actions shown on every tab page.
@@ -18,6 +18,9 @@ import { ThemeToggleComponent } from './theme-toggle.component';
       </ion-button>
       <ion-button routerLink="/account" fill="clear" title="Account" aria-label="Account">
         <ion-icon name="person-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button routerLink="/contact" fill="clear" title="Contact support" aria-label="Contact support">
+        <ion-icon name="mail-outline" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
   `,
@@ -51,6 +54,6 @@ import { ThemeToggleComponent } from './theme-toggle.component';
 })
 export class HeaderActionsComponent {
   constructor() {
-    addIcons({ statsChartOutline, personOutline });
+    addIcons({ statsChartOutline, personOutline, mailOutline });
   }
 }

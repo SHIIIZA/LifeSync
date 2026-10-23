@@ -127,6 +127,14 @@ import { ThemeToggleComponent } from '../shared/theme-toggle.component';
         }
       </div>
 
+      <div class="ls-card">
+        <p class="ls-eyebrow">Need help?</p>
+        <p class="section-hint">Send a message to the LifeSync support team.</p>
+        <ion-button expand="block" fill="outline" shape="round" routerLink="/contact">
+          Contact support
+        </ion-button>
+      </div>
+
       <!-- Danger zone -->
       <ion-button expand="block" fill="outline" color="danger" shape="round" (click)="logout()">
         <ion-icon name="log-out-outline" slot="start"></ion-icon>

@@ -70,3 +70,12 @@ ion-button {
   font-weight: 600;
   height: 52px;
 }
+
+.ob-contact {
+  display: block;
+  margin-top: 16px;
+  color: var(--ls-ink);
+  text-align: center;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

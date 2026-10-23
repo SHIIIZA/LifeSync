@@ -20,6 +20,11 @@ export const routes: Routes = [
       import('./login/login.page').then((m) => m.LoginPage),
   },
   {
+    path: 'contact',
+    loadComponent: () =>
+      import('./contact/contact.page').then((m) => m.ContactPage),
+  },
+  {
     path: 'tabs',
     canActivate: [authGuard],
     loadChildren: () => import('./tabs/tabs.routes').then((m) => m.TABS_ROUTES),

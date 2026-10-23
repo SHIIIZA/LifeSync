@@ -340,15 +340,27 @@ export class LoginPage {
         return 'Unable to connect. Check your internet connection and try again.';
       case 'auth/operation-not-allowed':
         return 'Email/password sign-in is not enabled for this Firebase project. Enable it in Firebase Authentication settings.';
+      case 'auth/invalid-api-key':
+        return 'This app’s Firebase API key is invalid. Check the main LifeSync Firebase configuration.';
+      case 'auth/configuration-not-found':
+        return 'Firebase Authentication is not configured for this project. Check the main LifeSync Firebase Console.';
+      case 'auth/admin-restricted-operation':
+        return 'Firebase is restricting account creation for this project. Check its Authentication settings.';
+      case 'auth/too-many-requests':
+        return 'Too many attempts were made. Wait a while, then try again.';
+      case 'auth/quota-exceeded':
+        return 'This Firebase project has reached an authentication quota. Try again later or ask the project owner to check usage.';
       case 'auth/unauthorized-domain':
         return 'This app domain is not authorized in Firebase Authentication settings.';
       case 'permission-denied':
       case 'firestore/permission-denied':
         return 'Firebase blocked the username lookup. Deploy the latest firestore.rules to your Firebase project, then try again.';
       default:
-        return mode === 'signup'
-          ? 'Unable to create your account right now. Please try again.'
-          : 'Unable to sign in right now. Please try again.';
+        const action =
+          mode === 'signup'
+            ? 'Unable to create your account right now. Please try again.'
+            : 'Unable to sign in right now. Please try again.';
+        return typeof code === 'string' ? `${action} (Firebase error: ${code})` : action;
     }
   }
 }
