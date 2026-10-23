@@ -171,6 +171,227 @@ ion-alert.day-picker-alert {
   align-items: center;
 }
 
+ion-modal.planner-date-time-modal {
+  --width: min(440px, calc(100vw - 24px));
+  --height: min(720px, calc(100dvh - 32px));
+  --border-radius: 28px;
+  --background: var(--ls-paper);
+  --box-shadow: 0 18px 56px var(--ls-picker-shadow);
+}
+
+ion-content.date-time-modal-content {
+  --background: var(--ls-paper);
+  --color: var(--ls-ink);
+}
+
+.samsung-picker {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding: 14px 14px 18px;
+  color: var(--ls-ink);
+}
+
+.time-wheel {
+  position: relative;
+  display: flex;
+  flex: 0 0 204px;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(4px, 2vw, 14px);
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.time-wheel::before {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  right: 3px;
+  left: 3px;
+  height: 48px;
+  border-top: 1px solid var(--ls-picker-line);
+  border-bottom: 1px solid var(--ls-picker-line);
+  content: '';
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.time-wheel::after {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    var(--ls-paper) 0%,
+    var(--ls-picker-fade) 17%,
+    transparent 39%,
+    transparent 61%,
+    var(--ls-picker-fade) 83%,
+    var(--ls-paper) 100%
+  );
+  content: '';
+  pointer-events: none;
+}
+
+.wheel-column {
+  box-sizing: border-box;
+  z-index: 0;
+  width: 76px;
+  height: 144px;
+  overflow-y: auto;
+  padding-block: 48px;
+  scrollbar-width: none;
+  scroll-snap-type: y mandatory;
+  overscroll-behavior: contain;
+}
+
+.wheel-column::-webkit-scrollbar {
+  display: none;
+}
+
+.wheel-column.period-column {
+  width: 66px;
+}
+
+.wheel-option {
+  display: flex;
+  width: 100%;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ls-picker-muted);
+  font: 500 22px/1 var(--ls-font-display);
+  scroll-snap-align: center;
+  cursor: pointer;
+}
+
+.wheel-option.active {
+  color: var(--ls-ink);
+  font-size: 30px;
+}
+
+.period-column .wheel-option {
+  font-family: var(--ls-font-body);
+  font-size: 18px;
+  text-transform: lowercase;
+}
+
+.period-column .wheel-option.active {
+  font-size: 21px;
+}
+
+.time-colon {
+  color: var(--ls-ink);
+  font-size: 29px;
+  font-weight: 400;
+  pointer-events: none;
+}
+
+.calendar-panel {
+  flex: 1 0 auto;
+  padding: 18px 16px 14px;
+  border-radius: 26px;
+  background: var(--ls-surface);
+  border: 1px solid var(--ls-line);
+}
+
+.calendar-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.calendar-heading h2 {
+  margin: 2px 0 0;
+  color: var(--ls-ink);
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.selected-date-label {
+  margin: 0;
+  color: var(--ls-ink-60);
+  font-size: 13px;
+}
+
+.month-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.month-controls button {
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ls-ink);
+  font: 400 30px/1 var(--ls-font-body);
+  cursor: pointer;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  justify-items: center;
+}
+
+.weekday-row {
+  margin-bottom: 5px;
+  color: var(--ls-ink-60);
+  font-size: 13px;
+}
+
+.weekday-row span:last-child {
+  color: var(--ls-alert);
+}
+
+.date-grid button {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ls-ink);
+  font: 400 14px var(--ls-font-body);
+  cursor: pointer;
+}
+
+.date-grid button.outside-month {
+  color: var(--ls-picker-outside);
+}
+
+.date-grid button.selected {
+  background: var(--ls-sky-tint);
+  color: var(--ls-ink);
+  outline: 2px solid var(--ls-sky);
+  outline-offset: -2px;
+  font-weight: 600;
+}
+
+.samsung-picker .date-time-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding-top: 14px;
+}
+
+.samsung-picker .date-time-actions ion-button {
+  --color: var(--ls-ink);
+  --background: var(--ls-surface);
+  --border-radius: 28px;
+  min-width: 112px;
+  border: 1px solid var(--ls-line);
+  border-radius: 28px;
+}
+
 .ion-padding {
   --ion-padding: clamp(16px, 3vw, 32px);
 }

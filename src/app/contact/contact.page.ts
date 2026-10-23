@@ -2,11 +2,14 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { addIcons } from 'ionicons';
+import { arrowBackOutline } from 'ionicons/icons';
 import {
   IonButton,
   IonButtons,
   IonContent,
   IonHeader,
+  IonIcon,
   IonInput,
   IonSelect,
   IonSelectOption,
@@ -31,6 +34,7 @@ const SUPPORT_EMAIL = 'ianlancemgeronimo@gmail.com';
     IonButtons,
     IonContent,
     IonHeader,
+    IonIcon,
     IonInput,
     IonSelect,
     IonSelectOption,
@@ -80,6 +84,7 @@ export class ContactPage {
     private supportRequestService: SupportRequestService,
     auth: AuthService,
   ) {
+    addIcons({ arrowBackOutline });
     this.form.patchValue({
       name: auth.displayName() ?? '',
       email: auth.email() ?? '',

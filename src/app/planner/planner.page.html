@@ -22,7 +22,9 @@
       <ion-input label="Course / task" labelPlacement="floating" formControlName="course"></ion-input>
     </ion-item>
     <ion-item>
-      <ion-input label='Time (e.g. "Today, 4:00 PM")' labelPlacement="floating" formControlName="time"></ion-input>
+      <ion-button class="date-time-trigger" fill="clear" expand="block" type="button" (click)="openDateTimePicker()">
+        {{ dateTimeLabel(form.controls.scheduledAt.value) }}
+      </ion-button>
     </ion-item>
     <ion-item>
       <ion-input label="Duration (min)" labelPlacement="floating" formControlName="durationMin" inputmode="numeric"></ion-input>
@@ -35,7 +37,7 @@
       </ion-select>
     </ion-item>
     @if (form.invalid && form.touched) {
-      <p class="form-error" role="alert">Enter a course, a valid time (for example "Today, 4:00 PM"), a duration from 1 to 1440 minutes, and a priority.</p>
+      <p class="form-error" role="alert">Enter a course, choose a date and time, set a duration from 1 to 1440 minutes, and choose a priority.</p>
     }
     <ion-button expand="block" shape="round" type="submit">
       {{ editingId ? 'Save changes' : 'Add block' }}
@@ -45,8 +47,85 @@
     }
   </form>
 
+  <ion-modal class="planner-date-time-modal" [isOpen]="dateTimeOpen" (didPresent)="initializeWheelPositions()" (didDismiss)="dateTimeOpen = false">
+    <ng-template>
+      <ion-content class="date-time-modal-content">
+        <div class="samsung-picker">
+          <div class="time-wheel" aria-label="Select time">
+            <div #hourWheel class="wheel-column" aria-label="Hour" role="listbox" (scroll)="onWheelScroll('hour', $event)">
+              @for (option of hourOptions; track option.index) {
+                <button
+                  class="wheel-option"
+                  type="button"
+                  [class.active]="activeHourIndex === option.index"
+                  (click)="selectWheelValue('hour', option.value)"
+                >{{ option.value }}</button>
+              }
+            </div>
+            <span class="time-colon">:</span>
+            <div #minuteWheel class="wheel-column" aria-label="Minute" role="listbox" (scroll)="onWheelScroll('minute', $event)">
+              @for (option of minuteOptions; track option.index) {
+                <button
+                  class="wheel-option"
+                  type="button"
+                  [class.active]="activeMinuteIndex === option.index"
+                  (click)="selectWheelValue('minute', option.value)"
+                >{{ option.value.toString().padStart(2, '0') }}</button>
+              }
+            </div>
+            <div #periodWheel class="wheel-column period-column" aria-label="AM or PM" role="listbox" (scroll)="onWheelScroll('period', $event)">
+              @for (option of periodOptions; track option.index) {
+                <button
+                  class="wheel-option"
+                  type="button"
+                  [class.active]="activePeriodIndex === option.index"
+                  (click)="selectWheelValue('period', option.value)"
+                >{{ option.value }}</button>
+              }
+            </div>
+          </div>
+
+          <section class="calendar-panel" aria-label="Choose a date">
+            <div class="calendar-heading">
+              <div>
+                <p class="selected-date-label">{{ selectedDateLabel() }}</p>
+                <h2>{{ monthLabel() }}</h2>
+              </div>
+              <div class="month-controls">
+                <button type="button" aria-label="Previous month" (click)="previousMonth()">‹</button>
+                <button type="button" aria-label="Next month" (click)="nextMonth()">›</button>
+              </div>
+            </div>
+            <div class="calendar-grid weekday-row">
+              @for (weekday of weekdays; track $index) {
+                <span>{{ weekday }}</span>
+              }
+            </div>
+            <div class="calendar-grid date-grid">
+              @for (day of calendarDays(); track $index) {
+                <button
+                  type="button"
+                  [class.selected]="isSelectedDate(day)"
+                  [class.outside-month]="!isVisibleMonth(day)"
+                  [attr.aria-label]="day.toLocaleDateString()"
+                  [attr.aria-pressed]="isSelectedDate(day)"
+                  (click)="selectDate(day)"
+                >{{ day.getDate() }}</button>
+              }
+            </div>
+          </section>
+
+          <div class="date-time-actions">
+            <ion-button fill="clear" (click)="dateTimeOpen = false">Cancel</ion-button>
+            <ion-button shape="round" (click)="saveDateTime()">Save</ion-button>
+          </div>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
   <div class="ls-section-title">
-    <h2>Today's study blocks</h2>
+    <h2>Your study blocks</h2>
     <a routerLink="/calendar">Week view</a>
   </div>
 
@@ -61,7 +140,12 @@
       <div class="ls-row accent-sky">
         <div class="row-body">
           <p class="row-title">{{ block.course }}</p>
-          <p class="row-time">{{ block.time }} · {{ block.durationMin }} min</p>
+          <p class="row-time">
+            @if (block.date) {
+              {{ formatBlockDate(block.date) }} ·
+            }
+            {{ block.time }} · {{ block.durationMin }} min
+          </p>
         </div>
         <span class="priority-pill" [class]="block.priority">{{ block.priority }}</span>
         <ion-button fill="clear" size="small" (click)="editBlock(block)">Edit</ion-button>

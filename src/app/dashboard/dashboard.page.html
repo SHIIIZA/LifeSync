@@ -45,7 +45,7 @@
       <ion-input label="Item title" labelPlacement="floating" formControlName="title"></ion-input>
     </ion-item>
     <ion-item>
-      <ion-input label="Time (e.g. 7:30 AM)" labelPlacement="floating" formControlName="time"></ion-input>
+      <ion-input type="time" step="60" label="Time" labelPlacement="floating" formControlName="time"></ion-input>
     </ion-item>
     <ion-item>
       <ion-select label="Category" labelPlacement="floating" formControlName="category">
@@ -63,7 +63,7 @@
       </ion-select>
     </ion-item>
     @if (form.invalid && form.touched) {
-      <p class="form-error" role="alert">Enter a title and a valid time like "7:30 AM" (hours 1–12, minutes 00–59).</p>
+      <p class="form-error" role="alert">Enter a title and select a valid time.</p>
     }
     <ion-button expand="block" shape="round" type="submit">Add to routine</ion-button>
   </form>
