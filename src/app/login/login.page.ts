@@ -325,42 +325,36 @@ export class LoginPage {
       case 'auth/invalid-credential':
       case 'auth/user-not-found':
       case 'auth/wrong-password':
-        return 'The username/email or password is incorrect.';
+        return 'We couldn’t sign you in. Check your username or email and password, then try again.';
       case 'auth/email-already-in-use':
-        return 'An account already exists for this email.';
+        return 'An account with this email already exists. Try signing in instead.';
       case 'auth/username-already-in-use':
         return 'That username is already taken. Choose another one.';
       case 'auth/invalid-username':
         return 'Use 2 to 30 letters, numbers, periods, underscores, or hyphens for your username.';
       case 'auth/signup-cleanup-failed':
-        return 'Unable to finish sign-up and clean up the incomplete account. Please contact support before trying again.';
+        return 'We couldn’t finish creating your account. Please try again later or contact support if the problem continues.';
       case 'auth/weak-password':
         return 'Choose a stronger password with at least 6 characters.';
       case 'auth/network-request-failed':
-        return 'Unable to connect. Check your internet connection and try again.';
+        return 'We couldn’t connect. Check your internet connection and try again.';
       case 'auth/operation-not-allowed':
-        return 'Email/password sign-in is not enabled for this Firebase project. Enable it in Firebase Authentication settings.';
       case 'auth/invalid-api-key':
-        return 'This app’s Firebase API key is invalid. Check the main LifeSync Firebase configuration.';
       case 'auth/configuration-not-found':
-        return 'Firebase Authentication is not configured for this project. Check the main LifeSync Firebase Console.';
       case 'auth/admin-restricted-operation':
-        return 'Firebase is restricting account creation for this project. Check its Authentication settings.';
-      case 'auth/too-many-requests':
-        return 'Too many attempts were made. Wait a while, then try again.';
-      case 'auth/quota-exceeded':
-        return 'This Firebase project has reached an authentication quota. Try again later or ask the project owner to check usage.';
       case 'auth/unauthorized-domain':
-        return 'This app domain is not authorized in Firebase Authentication settings.';
+        return 'Sign-in is temporarily unavailable. Please try again later.';
+      case 'auth/too-many-requests':
+        return 'There have been too many attempts. Please wait a while, then try again.';
+      case 'auth/quota-exceeded':
+        return 'This service is temporarily busy. Please try again later.';
       case 'permission-denied':
       case 'firestore/permission-denied':
-        return 'Firebase blocked the username lookup. Deploy the latest firestore.rules to your Firebase project, then try again.';
+        return 'We couldn’t complete your request right now. Please try again later.';
       default:
-        const action =
-          mode === 'signup'
-            ? 'Unable to create your account right now. Please try again.'
-            : 'Unable to sign in right now. Please try again.';
-        return typeof code === 'string' ? `${action} (Firebase error: ${code})` : action;
+        return mode === 'signup'
+          ? 'We couldn’t create your account right now. Please try again later.'
+          : 'We couldn’t sign you in right now. Please try again later.';
     }
   }
 }

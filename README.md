@@ -69,9 +69,9 @@ A mobile-friendly personal productivity app built with **Angular 17 + Ionic 7 + 
 - Onboarding screen, mobile-friendly layout
 - Light/dark colors follow the device appearance setting; interactive controls use larger touch targets
 - Loading spinners + error banners with retry on all tab pages
-- Offline resilience: Firestore IndexedDB persistence, online/offline detection, retry UX
+- Offline resilience: Firestore IndexedDB persistence, a global offline notice and warning, online/offline detection, retry UX
 - Invalid study-block edits, including impossible calendar dates, are blocked with a clear message
-- Authentication and account errors use user-safe messages rather than exposing backend details
+- Authentication and account errors use plain-language messages without exposing backend codes or setup details
 
 ---
 
