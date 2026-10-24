@@ -28,7 +28,8 @@ describe('AppComponent connectivity notice', () => {
     await fixture.whenStable();
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.textContent).toContain('You’re offline.');
+    expect(fixture.nativeElement.textContent).toContain('Offline mode');
+    expect(fixture.componentInstance.connectivityToast()).toBe('offline');
   });
 
   it('removes the persistent offline notice after reconnecting', async () => {
@@ -39,6 +40,7 @@ describe('AppComponent connectivity notice', () => {
     await fixture.whenStable();
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.textContent).not.toContain('You’re offline.');
+    expect(fixture.nativeElement.textContent).not.toContain('Offline mode');
+    expect(fixture.componentInstance.connectivityToast()).toBe('online');
   });
 });

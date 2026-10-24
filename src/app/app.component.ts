@@ -1,7 +1,7 @@
 import { Component, effect, signal } from '@angular/core';
 import { IonApp, IonIcon, IonRouterOutlet, IonToast } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { warningOutline } from 'ionicons/icons';
+import { checkmarkCircleOutline, warningOutline } from 'ionicons/icons';
 import { FirestoreDataService } from './data/firestore-data.service';
 import { ThemeService } from './shared/theme.service';
 
@@ -14,18 +14,20 @@ import { ThemeService } from './shared/theme.service';
       @if (!data.isOnline()) {
         <div class="offline-banner" role="status" aria-live="polite">
           <ion-icon name="warning-outline" aria-hidden="true"></ion-icon>
-          <span>You’re offline. LifeSync will keep working where possible; reconnect to sync your data.</span>
+          <span><strong>Offline mode</strong> — You’re using saved data. Reconnect to sync your changes.</span>
         </div>
       }
       <ion-router-outlet></ion-router-outlet>
       <ion-toast
-        [isOpen]="offlineToastOpen()"
-        message="You’re offline. Reconnect to sync your data and use online features."
-        icon="warning-outline"
+        [isOpen]="connectivityToast() !== null"
+        [message]="connectivityToast() === 'offline'
+          ? 'No internet connection. Your changes will sync when you reconnect.'
+          : 'You’re back online. LifeSync is syncing your changes.'"
+        [icon]="connectivityToast() === 'offline' ? 'warning-outline' : 'checkmark-circle-outline'"
         position="bottom"
-        color="warning"
+        [color]="connectivityToast() === 'offline' ? 'warning' : 'success'"
         [duration]="5000"
-        (ionToastDidDismiss)="offlineToastOpen.set(false)"
+        (ionToastDidDismiss)="connectivityToast.set(null)"
       ></ion-toast>
     </ion-app>
   `,
@@ -44,6 +46,8 @@ import { ThemeService } from './shared/theme.service';
       border-radius: 14px;
       background: var(--ls-alert-tint);
       color: var(--ls-ink);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       box-shadow: 0 4px 18px rgba(45, 29, 77, 0.16);
       font-size: 0.9rem;
       font-weight: 500;
@@ -58,15 +62,23 @@ import { ThemeService } from './shared/theme.service';
   `],
 })
 export class AppComponent {
-  readonly offlineToastOpen = signal(false);
+  readonly connectivityToast = signal<'offline' | 'online' | null>(null);
 
   constructor(
     _theme: ThemeService,
     readonly data: FirestoreDataService,
   ) {
-    addIcons({ warningOutline });
+    addIcons({ checkmarkCircleOutline, warningOutline });
+    let previousOnline = this.data.isOnline();
+    if (!previousOnline) this.connectivityToast.set('offline');
     effect(
-      () => this.offlineToastOpen.set(!this.data.isOnline()),
+      () => {
+        const online = this.data.isOnline();
+        if (online !== previousOnline) {
+          previousOnline = online;
+          this.connectivityToast.set(online ? 'online' : 'offline');
+        }
+      },
       { allowSignalWrites: true },
     );
   }
