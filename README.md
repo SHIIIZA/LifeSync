@@ -46,7 +46,7 @@ A mobile-friendly personal productivity app built with **Angular 17 + Ionic 7 + 
 - Edit category limits inline
 - Quick-entry expense form (validated), delete expenses
 - Threshold color warnings + toast alert at 85%+
-- Live USD→PHP exchange rate
+- Budget amounts and expense reports shown in Philippine pesos (₱)
 
 ### Meals
 - Weekly meal grid (day × Breakfast/Lunch/Dinner)

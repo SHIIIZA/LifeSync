@@ -57,10 +57,10 @@ export class XmlReportService {
     <h1>LifeSync — Expense Summary</h1>
     <table><tr><th>Label</th><th>Category</th><th>Amount</th><th>Date</th></tr>
       <xsl:for-each select="expenses/expense">
-        <tr><td><xsl:value-of select="label"/></td><td><xsl:value-of select="category"/></td><td>$<xsl:value-of select="amount"/></td><td><xsl:value-of select="date"/></td></tr>
+        <tr><td><xsl:value-of select="label"/></td><td><xsl:value-of select="category"/></td><td>₱<xsl:value-of select="amount"/></td><td><xsl:value-of select="date"/></td></tr>
       </xsl:for-each>
     </table>
-    <p>Total: $<xsl:value-of select="sum(expenses/expense/amount)"/></p>
+    <p>Total: ₱<xsl:value-of select="sum(expenses/expense/amount)"/></p>
     </body></html>
   </xsl:template>
 </xsl:stylesheet>`;

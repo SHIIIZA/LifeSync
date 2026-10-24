@@ -20,10 +20,6 @@ describe('ApiService', () => {
     expect(service.quoteAuthor()).toBe('Arthur Ashe');
   });
 
-  it('should have null exchange rate initially', () => {
-    expect(service.usdToPhp()).toBeNull();
-  });
-
   it('should handle fetch failure gracefully', async () => {
     // Mock fetch to throw
     spyOn(window, 'fetch').and.returnValue(Promise.reject(new Error('Network error')));

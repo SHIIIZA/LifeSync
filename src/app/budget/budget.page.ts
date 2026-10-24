@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -17,7 +17,6 @@ import {
   IonSelectOption,
 } from '@ionic/angular/standalone';
 import { FirestoreDataService } from '../data/firestore-data.service';
-import { ApiService } from '../api/api.service';
 import { ToastController } from '@ionic/angular/standalone';
 import { sanitizeText } from '../shared/sanitize';
 import { HeaderActionsComponent } from '../shared/header-actions.component';
@@ -46,11 +45,7 @@ import { LoadingSpinnerComponent } from '../shared/loading-spinner.component';
   templateUrl: './budget.page.html',
   styleUrl: './budget.page.scss',
 })
-export class BudgetPage implements OnInit {
-  ngOnInit() {
-    this.api.loadExchangeRate();
-  }
-
+export class BudgetPage {
   form = this.fb.group({
     label: [
       '',
@@ -72,7 +67,6 @@ export class BudgetPage implements OnInit {
 
   constructor(
     public data: FirestoreDataService,
-    public api: ApiService,
     private fb: FormBuilder,
     private toast: ToastController,
   ) {}
@@ -93,7 +87,7 @@ export class BudgetPage implements OnInit {
     if (!this.editingCatId) return;
     const limit = parseFloat(this.editLimitValue);
     if (!Number.isFinite(limit) || limit <= 0) {
-      this.editLimitError = 'Enter a limit greater than $0.';
+      this.editLimitError = 'Enter a limit greater than ₱0.';
       return;
     }
     await this.data.updateBudgetCategory(this.editingCatId, { limit });
@@ -128,7 +122,7 @@ export class BudgetPage implements OnInit {
     const updated = this.data.budgetCategories().find((c) => c.name === category);
     if (updated && updated.spent / Math.max(1, updated.limit) >= 0.85) {
       const t = await this.toast.create({
-        message: `${updated.name} is at ${Math.round((updated.spent / updated.limit) * 100)}% of its limit ($${updated.spent} / $${updated.limit})`,
+        message: `${updated.name} is at ${Math.round((updated.spent / updated.limit) * 100)}% of its limit (₱${updated.spent} / ₱${updated.limit})`,
         duration: 3000,
         color: 'warning',
       });
